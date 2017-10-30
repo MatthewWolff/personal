@@ -41,12 +41,27 @@ def cbs(s, t, itr=0, reuse=False, reusing=None):
     # generate all possible pairs from our new strings (a lot...)
     my_ret = tuple()
     if reuse:
-        cbs_strings_b = cbs_strings + reusing if reusing else cbs_strings  # union of old and new since reusing
-        pairs = tuple({x for x in itertools.product(cbs_strings_b, cbs_strings_b)})
+        cbs_strings = cbs_strings + reusing if reusing else cbs_strings  # union of old and new since reusing
+        pairs = tuple({x for x in itertools.product(cbs_strings, cbs_strings)})
         for pair in pairs:
-            my_ret += cbs(pair[0], pair[1], itr - 1, reuse=True, reusing=cbs_strings_b)
+            my_ret += cbs(pair[0], pair[1], itr - 1, reuse=True, reusing=cbs_strings)
     else:
-        cbs_strings_b = cbs_strings
+        pairs = tuple({x for x in itertools.product(cbs_strings, cbs_strings)})
+        for pair in pairs:
+            my_ret += cbs(pair[0], pair[1], itr - 1)
+
+    return tuple(set(my_ret))  # unique
+
+
+def _cbs(pair):
+    return "0{0}1{1}".format(pair[0], pair[1]), "1{0}0{1}".format(pair[0], pair[1])
+
+
+# Two empty strings are valid Constructed Bit Strings and the base case. itr = number of applications.
+# If checking for 0 or 1 applications, use itr=1 and reuse=True. If only looking for 1 application, reuse = False
+possible = cbs("", "", itr=1, reuse=True)
+print len(possible), possible
+cbs_strings
         pairs = tuple({x for x in itertools.product(cbs_strings_b, cbs_strings_b)})
         for pair in pairs:
             my_ret += cbs(pair[0], pair[1], itr - 1)
