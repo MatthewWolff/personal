@@ -61,19 +61,3 @@ def _cbs(pair):
 # If checking for 0 or 1 applications, use itr=1 and reuse=True. If only looking for 1 application, reuse = False
 possible = cbs("", "", itr=1, reuse=True)
 print len(possible), possible
-cbs_strings
-        pairs = tuple({x for x in itertools.product(cbs_strings_b, cbs_strings_b)})
-        for pair in pairs:
-            my_ret += cbs(pair[0], pair[1], itr - 1)
-
-    return tuple(set(my_ret))  # unique
-
-
-def _cbs(pair):
-    return "0{0}1{1}".format(pair[0], pair[1]), "1{0}0{1}".format(pair[0], pair[1])
-
-
-# Two empty strings are valid Constructed Bit Strings and the base case. itr = number of applications.
-# If checking for 0 or 1 applications, use itr=1 and reuse=True. If only looking for 1 application, reuse = False
-possible = cbs("", "", itr=2, reuse=True)
-print len(possible), possible
