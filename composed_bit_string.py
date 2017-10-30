@@ -1,12 +1,21 @@
 import itertools
 
 
-def cbs(s, t, itr=1, reuse=False):
+def cbs(s, t, itr=1, reuse=False, reusing=None):
     """Method to generate possible composed bit strings when given two starting composed bit strings.
     This method can do multiple iterations of the CBS construction, and reuse of previously generated
     strings is possible"""
     # generate all possible pairs
-    pairs = tuple({x for x in itertools.product([s, t], [s, t])})  # set ensures uniqueness of pairs
+    if reuse:
+        if reusing:
+            use = set([s] + [t] + list(reusing))
+            pairs = tuple({x for x in itertools.product(use, use)})  # set ensures uniqueness of pairs
+        else:
+            reusing = tuple({s, t})
+            pairs = tuple({x for x in itertools.product([s, t], [s, t])})
+    else:
+        pairs = tuple({x for x in itertools.product([s, t], [s, t])})  # set ensures uniqueness of pairs
+
     # generate the strings possible
     cbs_strings = []
     for pair in (map(_cbs, pairs)):
@@ -18,11 +27,18 @@ def cbs(s, t, itr=1, reuse=False):
         return cbs_strings
 
     # generate all possible pairs from our new strings (a lot...)
-    cbs_strings_b = cbs_strings + (s, t) if reuse else cbs_strings  # union of old and new if reusing
-    pairs = tuple({x for x in itertools.product(cbs_strings_b, cbs_strings_b)})
     my_ret = tuple()
-    for pair in pairs:
-        my_ret += cbs(pair[0], pair[1], itr - 1)
+    if reuse:
+        cbs_strings_b = cbs_strings + reusing if reusing else cbs_strings  # union of old and new since reusing
+        pairs = tuple({x for x in itertools.product(cbs_strings_b, cbs_strings_b)})
+        for pair in pairs:
+            my_ret += cbs(pair[0], pair[1], itr - 1, reuse=True, reusing=cbs_strings_b)
+    else:
+        cbs_strings_b = cbs_strings
+        pairs = tuple({x for x in itertools.product(cbs_strings_b, cbs_strings_b)})
+        for pair in pairs:
+            my_ret += cbs(pair[0], pair[1], itr - 1)
+
     return tuple(set(my_ret))  # unique
 
 
