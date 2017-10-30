@@ -1,9 +1,14 @@
 import itertools
 
 
-def cbs(s, t, itr=1, reuse=False, reusing=None):
+def cbs(s, t, itr=0, reuse=False, reusing=None):
     """Method to generate possible composed bit strings when given two starting composed bit strings.
-    This method can do multiple iterations of the CBS construction, and reuse previously generated strings"""
+    This method can do multiple iterations of the CBS construction, and reuse previously generated strings.
+
+    s, t are the starting strings.
+    itr is the number of applications of the Composed Bit String constructor.
+    reuse is a boolean indicating whether previously constructed strings will be considered.
+    reusing is a private variable. Do not touch it."""
     # generate all possible pairs
     if reuse:
         if reusing:
@@ -22,7 +27,7 @@ def cbs(s, t, itr=1, reuse=False, reusing=None):
             cbs_strings.append(string)
     cbs_strings = tuple(set(cbs_strings))  # unique
 
-    if itr is 1:
+    if itr is 0:
         return cbs_strings
 
     # generate all possible pairs from our new strings (a lot...)
@@ -45,5 +50,5 @@ def _cbs(pair):
     return "0{0}1{1}".format(pair[0], pair[1]), "1{0}0{1}".format(pair[0], pair[1])
 
 
-possible = cbs("", "", itr=2, reuse=True)
+possible = cbs("", "", itr=1, reuse=True)
 print len(possible), possible
