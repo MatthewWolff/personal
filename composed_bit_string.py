@@ -3,8 +3,7 @@ import itertools
 
 def cbs(s, t, itr=1, reuse=False, reusing=None):
     """Method to generate possible composed bit strings when given two starting composed bit strings.
-    This method can do multiple iterations of the CBS construction, and reuse of previously generated
-    strings is possible"""
+    This method can do multiple iterations of the CBS construction, and reuse previously generated strings"""
     # generate all possible pairs
     if reuse:
         if reusing:
