@@ -1,6 +1,5 @@
 import itertools
 
-
 # Consider the following inductive definition of a composed bit string of 0's and 1's.
 #
 # Foundation: The empty bit string is a composed bit string.
@@ -10,7 +9,7 @@ import itertools
 # Part b: List the composed bit strings that can be created by applying the constructor rule to bit strings that
 #  can be created with one or zero applications of the constructor rule. (Hint: there are 16 distinct bit strings.)
 
-def cbs(s, t, itr=0, reuse=False, reusing=None):
+def cbs(s, t, itr=1, reuse=False, reusing=None):
     """Method to generate possible composed bit strings when given two starting composed bit strings.
     This method can do multiple iterations of the CBS construction, and reuse previously generated strings.
     - s, t are the starting strings.
@@ -35,7 +34,7 @@ def cbs(s, t, itr=0, reuse=False, reusing=None):
             cbs_strings.append(string)
     cbs_strings = tuple(set(cbs_strings))  # unique
 
-    if itr is 0:
+    if itr is 1:
         return cbs_strings
 
     # generate all possible pairs from our new strings (a lot...)
@@ -59,5 +58,5 @@ def _cbs(pair):
 
 # Two empty strings are valid Constructed Bit Strings and the base case. itr = number of applications.
 # If checking for 0 or 1 applications, use itr=1 and reuse=True. If only looking for 1 application, reuse = False
-possible = cbs("", "", itr=1, reuse=True)
+possible = cbs("", "", itr=2, reuse=True)
 print len(possible), possible
