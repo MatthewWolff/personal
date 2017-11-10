@@ -10,12 +10,14 @@ import itertools
 #  can be created with one or zero applications of the constructor rule. (Hint: there are 16 distinct bit strings.)
 
 def cbs(s, t, itr=1, reuse=False, reusing=None):
-    """Method to generate possible composed bit strings when given two starting composed bit strings.
+    """
+    Method to generate possible composed bit strings when given two starting composed bit strings.
     This method can do multiple iterations of the CBS construction, and reuse previously generated strings.
     - s, t are the starting strings.
     - itr is the number of applications of the Composed Bit String constructor.
     - reuse is a boolean indicating whether previously constructed strings will be considered.
-    - reusing is a private variable. Do not touch it."""
+    - reusing is a private variable. Do not touch it.
+    """
     # generate all possible pairs
     if reuse:
         if reusing:
