@@ -4,13 +4,25 @@ import re
 """
 In order to use this script, you must first save each unique page from your SquareSpace website. You can do
 this on a Mac by pressing command-s. 
-Make sure you save each page in its own folder, aka save your "about" page
-in a folder called "about". You don't need to worry about the name of the .html file itself.
+Make sure you save each page in its own folder, aka save your "about" page in a folder called "about". You
+don't need to worry about the name of the .html file itself.
 Once you've saved each webpage to its own folder, put them all into a parent folder, and copy this script
 to be in the same parent folder, and then execute it.
 
+Example run:
 cd ~/parent_folder
 python SquareSpace.py
+>What is your website called? Include the https://, please!
+https://example.github.io/
+>What is the link to your favicon? give full url if not a local file. E.g. "/images/favicon.png".
+https://example.github.io/images/favicon.png
+>writing ./index.html
+>writing ./contact/index.html
+>writing ./leadership/index.html
+>writing ./read-me/index.html
+>writing ./work-experience/index.html
+done
+
 """
 from bs4 import BeautifulSoup
 
