@@ -21,7 +21,7 @@ https://example.github.io/images/favicon.png
 >writing ./leadership/index.html
 >writing ./read-me/index.html
 >writing ./work-experience/index.html
-done
+>done
 
 """
 from bs4 import BeautifulSoup
