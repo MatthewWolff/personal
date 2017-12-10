@@ -5,7 +5,8 @@ import re
 In order to use this script, you must first save each unique page from your SquareSpace website. You can do
 this on a Mac by pressing command-s. 
 Make sure you save each page in its own folder, aka save your "about" page in a folder called "about". You
-don't need to worry about the name of the .html file itself.
+don't need to worry about the name of the .html file itself. When you save a webpage in the format 
+"webpage, complete" it should create a folder of all the files from the page, including images and JS/CSS.
 Once you've saved each webpage to its own folder, put them all into a parent folder, and copy this script
 to be in the same parent folder, and then execute it.
 
