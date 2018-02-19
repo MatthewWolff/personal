@@ -1,4 +1,6 @@
 library(dplyr)
+library(ggplot2)
+
 battles <- read.csv("~/Downloads/pokemon-combat/combats.csv")
 tests <- read.csv("~/Downloads/pokemon-combat/tests.csv")
 pokemon <- read.csv("~/Downloads/pokemon-combat/pokemon.csv", na.strings=c("",NA))
