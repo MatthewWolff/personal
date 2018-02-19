@@ -13,16 +13,14 @@ colors <- c("chartreuse4","firebrick2","deepskyblue1","chartreuse2","black","dar
 ## Graphing poke-data
 poke_graph <- pokemon %>%
   gather(key=tmp, value=Type, Type.1, Type.2) %>%
+  select(-c(tmp)) %>% # toss out whether primary or secondary
   rename(ID = X.,
          Sp.Atk = Sp..Atk,
          Sp.Def = Sp..Def,
-         Gen = Generation,
-         tmp_leg = Legendary,
-         tmp_type = Type) %>%
+         Gen = Generation) %>%
   mutate(Power = pmax(Attack, Sp.Atk)) %>% # Judge by their best offensive stat
-  mutate(Type = factor(tmp_type, levels = types, ordered = TRUE)) %>% # refactor for coloring
-  mutate(Legendary = as.logical(tmp_leg)) %>% # convert
-  select(-c(tmp, tmp_leg, tmp_type)) %>% # toss out values
+  mutate(Type = factor(Type, levels = types, ordered = TRUE)) %>% # refactor for coloring
+  mutate(Legendary = as.logical(Legendary)) %>% # convert to real booleans
   filter(!is.na(Type)) # remove duplicates that don't have a secondary type
 
 ggplot(data=poke_graph, mapping = aes(Type, Power, fill=Type)) + 
