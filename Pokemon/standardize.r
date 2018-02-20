@@ -43,4 +43,4 @@ pd <- pokemon %>%
          Type2 = numerify_categorical(Type2),
          Gen = numerify_categorical(Gen),
          Legendary = binarize_categorical(Legendary)) %>% # convert binary to numeric
-  mutate(Type2 = lapply(pd$Type2, function(x) if(!is.null(x)) x else NA)) # turn NULLs into NA
+  mutate(Type2 = lapply(Type2, function(x) if(!is.null(x)) x else NA)) # turn NULLs into NA
