@@ -26,6 +26,10 @@ store_metadata <- function(x) write.csv(
   t(as.data.frame(metalists[[x]])), 
   paste0("~/projects/pokedata/", names(metalists[x]),".csv"),
   row.names = FALSE, na = "")
+store <- function(lists, metalists){
+  write.csv(lists, "~/projects/pokedata/main.csv", row.names = FALSE)
+  invisible(lapply(1:length(metalists), store_metadata))
+}
 
 # normalizing data
 pn <- pokemon %>% 
@@ -52,5 +56,4 @@ pn <- pokemon %>%
 # determine which lists need to be separately stored
 lists <- pn[which(!sapply(pn, class) == "list")]
 metalists <- pn[which(sapply(pn, class) == "list")]
-write.csv(lists, "~/projects/pokedata/main.csv", row.names = FALSE)
-invisible(lapply(1:length(metalists), store_metadata))
+store(lists, metalists)
