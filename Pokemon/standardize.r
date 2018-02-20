@@ -3,17 +3,15 @@ library(dplyr)
 input <- "~/Downloads/pokemon-combat/pokemon.csv"
 output <- "~/projects/pokedata/" # must end with a "/"
 
-pokemon <- read.csv(input, na.strings=c("",NA))
-## Prepare data 
-# helpers
+#####################################################################
+#' @param categorical a vector of categorical values that have levels
+#' @return 1-of-(C-1) effects-coding style list of vectors
 numerify_categorical <- function(categorical){
   uniq <- unique(categorical[!is.na(categorical)]) # remove NA's for the love of god
-  categorical <- factor(categorical, levels = uniq) # ordered for deterministic behavior
+  categorical <- factor(categorical, levels = uniq) 
   sorter <- lapply(uniq, function(x) {
-    if(is.na(x))
-      return(NULL)
-    rtn <- integer(length(uniq)); 
-    rtn[x] <- 1; 
+    rtn <- integer(length(uniq))
+    rtn[x] <- 1
     if(as.numeric(x) == length(rtn))
       rep(-1, length(rtn))
     else
@@ -22,19 +20,34 @@ numerify_categorical <- function(categorical){
   names(sorter) <- uniq
   return(unname(sorter[categorical]))
 }
-binarize_categorical <- function(binary_data){
-  return(sapply(as.logical(binary_data), function(x) if(x) 1 else -1))
-}
-store_metadata <- function(x) write.csv(
-  t(as.data.frame(metalists[[x]])), 
-  paste0(output, names(metalists[x]),".csv"),
-  row.names = FALSE, na = "")
-store <- function(lists, metalists){
-  write.csv(lists, paste0(output,"main.csv"), row.names = FALSE)
+
+#####################################################################
+#' @param binary_data a vector of values that can be coerced to boolean
+#' @return a vector of -1 and 1's
+binarize_categorical <- function(binary_data)
+  sapply(as.logical(binary_data), function(x) if(x) 1 else -1)
+
+#####################################################################
+#' @param x the index within the metadata list of the list to be stored
+#' @return None
+store_metadata <- function(x) 
+  write.csv(
+    t(as.data.frame(metalists[[x]])), 
+    paste0(output, names(metalists[x]),".csv"),
+    row.names = FALSE, na = "")
+#####################################################################
+#' @param list the main list to store
+#' @param metalists columns from the main list that need to be stored as separate data.frames
+#' @return None
+store <- function(list, metalists){
+  write.csv(list, paste0(output,"main.csv"), row.names = FALSE)
   invisible(lapply(1:length(metalists), store_metadata))
 }
+         
+#####################################################################
 
 # normalizing data
+pokemon <- read.csv(input, na.strings=c("",NA))
 pn <- pokemon %>% 
   rename(ID = X.,
          Type1 = Type.1,
