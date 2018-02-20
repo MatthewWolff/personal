@@ -1,6 +1,9 @@
 library(dplyr)
 
-pokemon <- read.csv("~/Downloads/pokemon-combat/pokemon.csv", na.strings=c("",NA))
+input <- "~/Downloads/pokemon-combat/pokemon.csv"
+output <- "~/projects/pokedata/" # must end with a "/"
+
+pokemon <- read.csv(input, na.strings=c("",NA))
 ## Prepare data 
 # helpers
 numerify_categorical <- function(categorical){
@@ -24,10 +27,10 @@ binarize_categorical <- function(binary_data){
 }
 store_metadata <- function(x) write.csv(
   t(as.data.frame(metalists[[x]])), 
-  paste0("~/projects/pokedata/", names(metalists[x]),".csv"),
+  paste0(output, names(metalists[x]),".csv"),
   row.names = FALSE, na = "")
 store <- function(lists, metalists){
-  write.csv(lists, "~/projects/pokedata/main.csv", row.names = FALSE)
+  write.csv(lists, paste0(output,"main.csv"), row.names = FALSE)
   invisible(lapply(1:length(metalists), store_metadata))
 }
 
