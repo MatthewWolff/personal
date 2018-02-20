@@ -35,6 +35,7 @@ store_metadata <- function(x)
     t(as.data.frame(metalists[[x]])), 
     paste0(output, names(metalists[x]),".csv"),
     row.names = FALSE, na = "")
+    
 #####################################################################
 #' @param list the main list to store
 #' @param metalists columns from the main list that need to be stored as separate data.frames
