@@ -4,8 +4,8 @@ pokemon <- read.csv("~/Downloads/pokemon-combat/pokemon.csv", na.strings=c("",NA
 ## Prepare data 
 # helpers
 numerify_categorical <- function(categorical){
-  uniq <- unique(categorical)
-  categorical <- factor(categorical, levels = uniq, ordered = TRUE) # ordered for deterministic behavior
+  uniq <- unique(categorical[!is.na(categorical)]) # remove NA's for the love of god
+  categorical <- factor(categorical, levels = uniq) # ordered for deterministic behavior
   sorter <- lapply(uniq, function(x) {
     if(is.na(x))
       return(NULL)
@@ -17,14 +17,18 @@ numerify_categorical <- function(categorical){
       rtn
   })
   names(sorter) <- uniq
-  return(sorter[categorical])
+  return(unname(sorter[categorical]))
 }
 binarize_categorical <- function(binary_data){
   return(sapply(as.logical(binary_data), function(x) if(x) 1 else -1))
 }
+store_metadata <- function(x) write.csv(
+  t(as.data.frame(metalists[[x]])), 
+  paste0("~/projects/pokedata/", names(metalists[x]),".csv"),
+  row.names = FALSE, na = "")
 
 # normalizing data
-pd <- pokemon %>% 
+pn <- pokemon %>% 
   rename(ID = X.,
          Type1 = Type.1,
          Type2 = Type.2,
@@ -44,3 +48,9 @@ pd <- pokemon %>%
          Gen = numerify_categorical(Gen),
          Legendary = binarize_categorical(Legendary)) %>% # convert binary to numeric
   mutate(Type2 = lapply(Type2, function(x) if(!is.null(x)) x else NA)) # turn NULLs into NA
+
+# determine which lists need to be separately stored
+lists <- pn[which(!sapply(pn, class) == "list")]
+metalists <- pn[which(sapply(pn, class) == "list")]
+write.csv(lists, "~/projects/pokedata/main.csv", row.names = FALSE)
+invisible(lapply(1:length(metalists), store_metadata))
