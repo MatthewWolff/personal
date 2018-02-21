@@ -107,7 +107,7 @@ test_neural_net <- function(nn){
   predicted <- compute(nn, testing)
   predicted$net.result <- sapply(predicted$net.result, round, digits=0)
   acc <- sum((predicted$net.result == check_winners(testing_size)))/testing_size
-  cat("Neural Net Accuracy: ", acc*100, "%\n")
+  cat("Neural Net of training size",length(nn$response),"\n\tAccuracy: ", acc*100, "%\n")
 }
 #####################################################################
 
