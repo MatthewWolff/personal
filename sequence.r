@@ -16,4 +16,4 @@ DNA[which(DNA == "A")] <- "T"
 DNA[which(DNA == "U")] <- "A"
 DNA[is.na(DNA)] <- "???"; DNA2[is.na(DNA2)] <- "???"
 DNA <- paste(DNA,collapse=""); DNA2 <- paste(DNA2,collapse="")
-cat("DNA:\n3' -> ",DNA, " -> 5'\n5' <- ", DNA2, " <- 3'\n", sep = "")
+cat("DNA:\n3' -> ",DNA, " -> 5' (template)\n5' <- ", DNA2, " <- 3' (coding)", sep = "")
