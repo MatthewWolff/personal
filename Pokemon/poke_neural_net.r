@@ -78,19 +78,9 @@ check_winners <- function(how_many){
   return(unname(unlist(test[3])[1:how_many]))
 }
 #####################################################################
-run_neural_net <- function(training_set, testing_set, sampling_size,
-                           testing_to_training="ALL"){
-  
+generate_neural_net <- function(training_set, sampling_size){
   dat <- make_battle(training_set, sampling_size)
   dat <- add_winner(dat, sampling_size)
-  # decide how many to test with
-  if(testing_to_training == "ALL")
-    testing_size = dim(testing_set)[1]
-  else
-    testing_size <- round(sampling_size*testing_to_training)
-  
-  testing <- make_battle(testing_set, testing_size)
-  
   # select features and turn into formula
   feats <- c(paste0(names(raw), 1), paste0(names(raw), 2))
   f <- paste(feats, collapse=' + ')
@@ -102,19 +92,23 @@ run_neural_net <- function(training_set, testing_set, sampling_size,
   nn <- neuralnet(f, dat, hidden=c(10, 10, 10), linear.output=FALSE)
   time_taken <- proc.time() - ptm
   
+  # Check out the neural net
+  # plot(nn)
+  result <- paste("Net with sample of", sampling_size,"took:", time_taken[3], "seconds.\n")
+  write(result, paste0(output, "performance.txt"), append = TRUE)
+  print(result)
+  return(nn)
+}
+
+test_neural_net <- function(nn){
+  testing_size = dim(test)[1]
+  testing <- make_battle(test, testing_size)
   # apply the neural net to some tests
   predicted <- compute(nn, testing)
   predicted$net.result <- sapply(predicted$net.result, round, digits=0)
   acc <- sum((predicted$net.result == check_winners(testing_size)))/testing_size
-  cat("Net with sample of ", sampling_size," took: ", time_taken[3], 
-      " seconds.\nAccuracy: ", acc*100, "%", sep = "")
-  # Check out the neural net
-  # plot(nn)
-  return(c("Neural Net with training size of ", sampling_size," took: ", time_taken[3], 
-           " seconds.\nAccuracy: ", acc*100, "%\n"))
-  # return(nn) 
+  cat("Neural Net Accuracy: ", acc*100, "%\n")
 }
-
 #####################################################################
 
 # normalizing data
@@ -158,8 +152,8 @@ test = subset(training_data, split == FALSE)
 # parallelize neural net generation
 no_cores <- detectCores() - 1
 cl <- makeCluster(no_cores, type="FORK")
-nn <- parLapply(cl, seq(1000, 7000, by=1000), 
-                function(x) run_neural_net(train, test, x))
+nn <- parLapply(cl, seq(1000, 2000, by=1000), 
+                function(x) generate_neural_net(train, x))
 # print results && kill cluster
-invisible(sapply(nn, cat, sep=""))
+invisible(sapply(nn, test_neural_net))
 stopCluster(cl)
