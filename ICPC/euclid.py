@@ -5,4 +5,4 @@ def euclid(x, y):  # euclidean GCD
     return y
 
 
-print euclid(60, 54)
+print euclid(25, 10)
