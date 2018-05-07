@@ -28,4 +28,4 @@ wget https://raw.githubusercontent.com/MatthewWolff/Scraps/master/funky.zsh-them
 # install syntax highlighting
 cd $HOME/.oh-my-zsh && git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
 source $HOME/.zshrc
-exit 0
+exec zsh -l
