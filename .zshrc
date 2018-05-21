@@ -61,6 +61,8 @@ source $ZSH/oh-my-zsh.sh
 
 #### USER CONFIGURATION
 
+source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command highlighter
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
