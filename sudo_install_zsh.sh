@@ -14,7 +14,10 @@ which zsh # store a success flag
 if [ $? -ne 0 ]; then # need to install zsh
   echo "installing zsh if on mac or linux"
   case "$(system)" in
-	Mac*)	which brew && sudo brew install zsh;;
+	Mac*)	
+		which brew && sudo brew install zsh || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		brew install wget
+		;;
 	Linux*)	sudo apt-get install zsh;;
   esac
 fi
