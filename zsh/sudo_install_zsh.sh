@@ -24,9 +24,8 @@ fi
 
 # install oh-my-zsh and grab custom .zshrc and funky theme files from github
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
-cp $HOME/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
-wget https://raw.githubusercontent.com/MatthewWolff/Scraps/master/.zshrc -O $HOME/.zshrc
-wget https://raw.githubusercontent.com/MatthewWolff/Scraps/master/funky.zsh-theme -O $HOME/.oh-my-zsh/themes/funky.zsh-theme
+curl -o $HOME/.zshrc https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/.zshrc 
+curl -o $HOME/.oh-my-zsh/themes/funky.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/funky.zsh-theme 
 
 # install syntax highlighting
 cd $HOME/.oh-my-zsh && git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
