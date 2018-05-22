@@ -15,8 +15,8 @@ if [ $? -ne 0 ]; then # need to install zsh
   echo "installing zsh if on mac or linux"
   case "$(system)" in
 	Mac*)	
-		which brew && sudo brew install zsh || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-		brew install wget
+		which brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		sudo brew install zsh  # installs brew if necessary to get zsh
 		;;
 	Linux*)	sudo apt-get install zsh;;
   esac
@@ -29,5 +29,4 @@ curl -o $HOME/.oh-my-zsh/themes/funky.zsh-theme https://raw.githubusercontent.co
 
 # install syntax highlighting
 cd $HOME/.oh-my-zsh && git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
-source $HOME/.zshrc
 exec zsh -l
