@@ -87,7 +87,7 @@ addalias()
         new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
         echo $new_alias >> ~/.bashrc
         echo $new_alias >> ~/.zshrc
-        src
+        source ~/.bashrc; source ~/.zshrc # order matters
 }
 settheme()
 {
@@ -96,8 +96,8 @@ settheme()
 }
 
 #### ALIASES
-alias src='source ~/.bashrc; source ~/.zshrc'
-alias theme='source ~/.zshrc' # picks a random theme
+alias theme='source ~/.zshrc' # picks a random theme if curr theme is "random"
+alias rand='settheme random; source ~/.zshrc'
 alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it doesn't show the working directory
 alias search='grep -rwn * -e '
 alias push='git push -u origin master'
