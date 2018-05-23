@@ -15,7 +15,7 @@ function ssh_connection() {
   fi
 }
 RPROMPT='[%D{%L:%M:%S}]'
-PROMPT="╭─${path_p}─${user_host}─${hist_no} $(ssh_connection)
+PROMPT="╭─${path_p}─${user_host}─%{$(battery_pct_prompt)%}─${hist_no} $(ssh_connection)
 ╰─${blue_op}${smiley}${blue_cp} > "
 local cur_cmd="${blue_op}%_${blue_cp}"
 PROMPT2="${cur_cmd}> "
