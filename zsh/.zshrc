@@ -102,5 +102,12 @@ alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it do
 alias search='grep -rwn * -e '
 alias push='git push -u origin master'
 alias pull='git pull'
-alias ls='ls --color'
-alias grep='grep --color=auto'
+alias ls='ls --color'  # ls -G on mac
+alias daddy='sudo'
+alias grep='grep --color=auto' 
+alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/start-yarn.sh'
+alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
+alias ha='hstart'
+alias ho='hstop'
+alias hfs='hadoop fs'
+alias self='ssh `networksetup -getcomputername`.local'  # mac only?
