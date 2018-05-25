@@ -1,4 +1,4 @@
-### CUSTOM PROMPT
+# CUSTOM PROMPT
 ERR="\$(if [ \$? == 0 ]; then echo '>:)'; else echo '\[\033[0;31m\]>:(\[\033[0m\]'; fi)"
 RESET="\[\033[0m\]"
 RED="\[\033[0;31m\]"
@@ -7,6 +7,11 @@ BLUE="\[\033[01;34m\]"
 YELLOW="\[\033[0;33m\]"
 WHITE="\[\033[1;37m\]"
 GRAY="\[\033[0;37m\]"
+HPIPE="\[\e(0\]q\[\e(B\]"
+UP_PIPE="\[\e(0\]lq\[\e(B\]"  # l for the initial up, then q as connect
+DOWN_PIPE="\[\e(0\]mq\[\e(B\]"  # see above. m=down
+OB='\[\033[0;37m\][\[\033[0m\]' # open bracket
+CB='\[\033[0;37m\]]\[\033[0m\]' # close bracket
 
 function ssh_connection() {
   if [[ -n $SSH_CONNECTION ]]; then
@@ -30,11 +35,11 @@ function parse_git_branch {
 }
 PROMPT_COMMAND=parse_git_branch
 PS_GIT="$YELLOW\$PS_BRANCH"
-PS_TIME="\[\033[\$((COLUMNS-10))G\] $GRAY[$RESET\t$GRAY]$RESET"
-HIST_NO="$GRAY[$RESET\!$GRAY]$RESET"
-EXIT_CODE="$GRAY[$RESET$ERR$GRAY]$RESET"
-PS_INFO="\[\e(0\]lq\[\e(B\]$GRAY[$BLUE\w$GRAY]$RESET-$GRAY[$WHITE\u@\h$GRAY]$RESET-${HIST_NO} $(ssh_connection)"
-export PS1="${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}\[\e(0\]mq\[\e(B\]${EXIT_CODE} > "
+PS_TIME="\[\033[\$((COLUMNS-10))G\] $OB\t$CB"
+HIST_NO="$OB\!$CB"
+EXIT_CODE="$OB$ERR$CB"
+PS_INFO="$UP_PIPE$OB$BLUE\w$CB$HPIPE$OB$WHITE\u@\h$CB$HPIPE${HIST_NO} $(ssh_connection)"
+export PS1="${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}$DOWN_PIPE${EXIT_CODE} > "
 
 ### PACKAGES
 # added by Anaconda3 installer
