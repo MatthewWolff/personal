@@ -28,3 +28,26 @@ HIST_NO="$GRAY[$RESET\!$GRAY]$RESET"
 EXIT_CODE="$GRAY[$RESET$ERR$GRAY]$RESET"
 PS_INFO="\[\e(0\]lq\[\e(B\]$GRAY[$BLUE\w$GRAY]$RESET-$GRAY[$WHITE\u@\h$GRAY]$RESET-${HIST_NO}"
 export PS1="${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}\[\e(0\]mq\[\e(B\]${EXIT_CODE} > "
+
+### PACKAGES
+# added by Anaconda3 installer
+export PATH="/home/$USER/anaconda3/bin:$PATH"
+
+### FUNCTIONS
+addalias()
+{
+        new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
+        echo $new_alias >> ~/.bashrc
+        source ~/.bashrc # order matters
+}
+
+### ALIASES
+alias l='ls -lah'
+alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it doesn't show the working directory
+alias search='grep -rwn * -e '
+alias push='git push -u origin master'
+alias pull='git pull'
+alias ls='ls --color'
+alias daddy='sudo'
+alias grep='grep --color=auto'
+alias colors='/home/$USER/.colors.sh'
