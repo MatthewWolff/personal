@@ -13,7 +13,7 @@ make install
 # echo "exec $HOME/libraries/bin/zsh -l" >> ~/.profile
 echo "exec $HOME/libraries/bin/zsh -l" >> ~/.bashrc
 
-# Install oh-my-zsh and grab custom .zshrc and funky theme files from github
+# Install oh-my-zsh and grab custom .zshrc and wolffy theme files from github
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
 curl -o $HOME/.zshrc https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/.zshrc
 curl -o $HOME/.oh-my-zsh/themes/wolffy.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/wolffy.zsh-theme 
