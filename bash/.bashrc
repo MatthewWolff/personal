@@ -30,7 +30,7 @@ function parse_git_branch {
 }
 PROMPT_COMMAND=parse_git_branch
 PS_GIT="$YELLOW\$PS_BRANCH"
-PS_TIME="\[\033[\$((COLUMNS-10))G\] $RED[\t]"
+PS_TIME="\[\033[\$((COLUMNS-10))G\] $GRAY[$RESET\t$GRAY]$RESET"
 HIST_NO="$GRAY[$RESET\!$GRAY]$RESET"
 EXIT_CODE="$GRAY[$RESET$ERR$GRAY]$RESET"
 PS_INFO="\[\e(0\]lq\[\e(B\]$GRAY[$BLUE\w$GRAY]$RESET-$GRAY[$WHITE\u@\h$GRAY]$RESET-${HIST_NO} $(ssh_connection)"
