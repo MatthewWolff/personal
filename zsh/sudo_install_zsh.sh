@@ -19,10 +19,10 @@ if [ $? -ne 0 ]; then # need to install zsh
   esac
 fi
 
-# install oh-my-zsh and grab custom .zshrc and funky theme files from github
+# install oh-my-zsh and grab custom .zshrc and wolffy theme files from github
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
 curl -o $HOME/.zshrc https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/.zshrc 
-curl -o $HOME/.oh-my-zsh/themes/funky.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/funky.zsh-theme 
+curl -o $HOME/.oh-my-zsh/themes/wolffy.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/wolffy.zsh-theme 
 
 # install syntax highlighting
 cd $HOME/.oh-my-zsh && git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
