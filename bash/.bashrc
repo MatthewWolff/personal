@@ -50,7 +50,7 @@ addalias()
 {
         new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
         echo $new_alias >> ~/.bashrc
-        source ~/.bashrc # order matters
+        source ~/.bashrc 
 }
 
 ### ALIASES
