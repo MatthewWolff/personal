@@ -12,7 +12,7 @@ function battery_pct_prompt () {
     else
       color='red'
     fi
-    echo "${blue_op}%{$fg[$color]%}$(($(battery_pct_remaining) + 2))%%${blue_cp}%{$reset_color%}"
+    echo "${blue_op}%{$fg[$color]%}$(battery_pct_remaining)%%${blue_cp}%{$reset_color%}"
   else
     echo "${blue_op}∞${blue_cp}"
   fi
