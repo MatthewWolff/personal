@@ -32,11 +32,19 @@ function ssh_connection() {
   fi
 }
 
+function git_prompt() {
+  if [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1; then
+    gitprompt=$(sed "s/:/ /" <<< `git_prompt_info` | sed "s/[()]//g")
+    repo=$(basename `git rev-parse --show-toplevel`)
+    echo "%{$fg[yellow]%}($gitprompt $repo)%{$reset_color%} "
+  fi
+}
+
 RPROMPT='${blue_op}%D{%L:%M:%S}${blue_cp}'
 if ! which ioreg | grep -q 'not found'; then # mac only >:)      (see source code @ top for linux)
-  PROMPT=$'╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection)\n╰─${smiley} > '
+  PROMPT=$'╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > '
 else
-  PROMPT=$'╭─${path_p}─${user_host}─${hist_no} $(ssh_connection)\n╰─${smiley} > ' # forced interpolation for \n
+  PROMPT=$'╭─${path_p}─${user_host}─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > ' # forced interpolation for \n
 fi
 local cur_cmd="${blue_op}%_${blue_cp}"
 PROMPT2="${cur_cmd}> "
