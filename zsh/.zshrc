@@ -111,3 +111,4 @@ alias ha='hstart'
 alias ho='hstop'
 alias hfs='hadoop fs'
 alias self='ssh `networksetup -getcomputername`.local'  # mac only?
+alias rc='vim ~/.zshrc'
