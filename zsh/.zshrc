@@ -94,6 +94,8 @@ settheme()
     sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc
     source ~/.zshrc
 }
+cd(){ builtin cd $@ && ls; }
+hfs(){ hadoop fs -$*; }
 
 #### ALIASES
 alias theme='source ~/.zshrc' # picks a random theme if curr theme is "random"
@@ -109,6 +111,5 @@ alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar
 alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
 alias ha='hstart'
 alias ho='hstop'
-alias hfs='hadoop fs'
 alias self='ssh `networksetup -getcomputername`.local'  # mac only?
 alias rc='vim ~/.zshrc'
