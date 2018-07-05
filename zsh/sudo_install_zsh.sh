@@ -10,8 +10,8 @@ system() {
   esac
 echo ${machine}
 }
-which zsh # store a success flag
-if [ $? -ne 0 ]; then # need to install zsh
+
+if ! which zsh > /dev/null; then # need to install zsh
   echo "installing zsh if on mac or linux"
   case "$(system)" in
 	Mac*)	which brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && sudo brew install zsh;;
