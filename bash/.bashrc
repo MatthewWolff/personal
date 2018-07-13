@@ -1,3 +1,13 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
 # CUSTOM PROMPT
 ERR="\$(if [ \$? == 0 ]; then echo '>:)'; else echo '\[\033[0;31m\]>:(\[\033[0m\]'; fi)"
 RESET="\[\033[0m\]"
@@ -50,17 +60,42 @@ EXIT_CODE="$OB$ERR$CB"
 PS_INFO="$UP_PIPE$(arity_env)$OB$BLUE\w$CB$HPIPE$OB$WHITE\u@\h$CB$HPIPE${HIST_NO} $(ssh_connection)"
 export PS1="${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}$DOWN_PIPE${EXIT_CODE} > "
 
+### ETERNAL BASH HISTORY
+# ---------------------
+# https://stackoverflow.com/a/19533853/
+# ---------------------
+# Undocumented feature which sets the size to "unlimited".
+# http://stackoverflow.com/questions/9457233/unlimited-bash-history
+export HISTFILESIZE=
+export HISTSIZE=
+export HISTTIMEFORMAT="[%F %T] "
+# Change the file location because certain bash sessions truncate .bash_history file upon close.
+# http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
+export HISTFILE=~/.bash_eternal_history
+# Force prompt to write history after every command.
+# http://superuser.com/questions/20900/bash-history-loss
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
 ### PACKAGES
-# added by Anaconda3 installer
-export PATH="/home/$USER/anaconda3/bin:$PATH"
+# added by Anaconda installer
+export PATH=/usr/anaconda/anaconda2/bin:$PATH
+export SPARK_MAJOR_VERSION=2
+
+### TICKET
+kinit -kt /etc/security/keytabs/mwoll-t.keytab mwoll-t@SVC.ARITYPLATFORM.IO  # get ticket
 
 ### FUNCTIONS
 addalias()
 {
         new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
         echo $new_alias >> ~/.bashrc
-        source ~/.bashrc 
+        source ~/.bashrc
 }
+cd() { builtin cd $* && ls ;}
+hfs() { hadoop fs -$*; }
+recent() { ls -Ut1 $1 | head -n1 | xargs find $1 -name | xargs cat ;}
+checkerr() { recent $1 | grep Exception;}
+func() { grep $1 < ~/.bashrc;}
 
 ### ALIASES
 alias l='ls -lah'
@@ -72,4 +107,8 @@ alias ls='ls --color'
 alias daddy='sudo'
 alias grep='grep --color=auto'
 alias colors='/home/$USER/.colors.sh'
-alias rc='vim ~/.basrhc'
+alias vim='vi'
+alias kerb='kinit -kt /etc/security/keytabs/mwoll-t.keytab mwoll-t@SVC.ARITYPLATFORM.IO'
+alias rc='vim ~/.bashrc'
+alias mailme='echo "Well something ended" | mailx -s "Done, Boi" matt.wolff@arity.com'
+alias rd='rmdir'
