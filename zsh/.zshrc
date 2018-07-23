@@ -9,38 +9,8 @@ ZSH_THEME="wolffy"
 # Setting this variable when ZSH_THEME=random
 # cause zsh load theme from this variable instead of
 # looking in ~/.oh-my-zsh/themes/
-# An empty array have no effect
+# An empty array has no effect
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -57,29 +27,9 @@ plugins=(
   git battery
 )
 
-source $ZSH/oh-my-zsh.sh
-
 #### USER CONFIGURATION
-
 source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command highlighter
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+source $ZSH/oh-my-zsh.sh
 
 #### FUNCTIONS
 addalias()
@@ -94,22 +44,32 @@ settheme()
     sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc
     source ~/.zshrc
 }
+sublime()
+{
+  open "$@" -a "/Applications/Sublime Text.app"
+}
+pycharm()
+{
+  open "$@" -a "/Applications/PyCharm.app"
+}
 cd(){ builtin cd $@ && ls; }
 hfs(){ hadoop fs -$*; }
 
 #### ALIASES
+alias daddy='sudo'
 alias theme='source ~/.zshrc' # picks a random theme if curr theme is "random"
-alias rand='settheme random; source ~/.zshrc'
+alias rand='[[ $ZSH_THEME = random ]] || settheme random; source ~/.zshrc'
 alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it doesn't show the working directory
 alias search='grep -rwn * -e '
 alias push='git push -u origin master'
 alias pull='git pull'
+alias gaa='git add --all'
+alias 'gcn!'='git commit -v --no-edit --amend'  # retroactively commit files to last commit
+alias force='git push -u -f origin master'
+alias 'oops!'='gaa && gcn! && force'
 alias ls='ls --color'  # ls -G on mac
-alias daddy='sudo'
 alias grep='grep --color=auto' 
 alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/start-yarn.sh'
 alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
-alias ha='hstart'
-alias ho='hstop'
 alias self='ssh `networksetup -getcomputername`.local'  # mac only?
 alias rc='vim ~/.zshrc'
