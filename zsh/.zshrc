@@ -28,16 +28,15 @@ plugins=(
 )
 
 #### USER CONFIGURATION
-source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command highlighter
+source $ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command highlighter
 source $ZSH/oh-my-zsh.sh
 
 #### FUNCTIONS
 addalias()
 {
         new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
-        echo $new_alias >> ~/.bashrc
         echo $new_alias >> ~/.zshrc
-        source ~/.bashrc; source ~/.zshrc # order matters
+        source ~/.zshrc # order matters
 }
 settheme()
 {
