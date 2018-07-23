@@ -12,19 +12,19 @@ function battery_pct_prompt () {
     else
       color='red'
     fi
-    echo "${blue_op}%{$fg[$color]%}$(battery_pct_remaining)%%${blue_cp}%{$reset_color%}"
+    echo "${op}%{$fg[$color]%}$(battery_pct_remaining)%%${cp}%{$reset_color%}"
   else
-    echo "${blue_op}∞${blue_cp}"
+    echo "${op}∞${cp}"
   fi
 }
 
-local blue_op="%{$fg[blue]%}[%{$reset_color%}"
-local blue_cp="%{$fg[blue]%}]%{$reset_color%}"
-local path_p="${blue_op}$fg_bold[blue]%~$reset_color${blue_cp}"
-local user_host="${blue_op}$fg_bold[white]%n@%m$reset_color${blue_cp}"
-local ret_status="${blue_op}%?${blue_cp}"
-local hist_no="${blue_op}%h${blue_cp}"
-local smiley="${blue_op}%(?,%{$fg[green]%}>:%)%{$reset_color%},%{$fg[red]%}>:(%{$reset_color%})${blue_cp}"
+local op="%{$fg[white]%}[%{$reset_color%}"
+local cp="%{$fg[white]%}]%{$reset_color%}"
+local path_p="${op}$fg_bold[blue]%~$reset_color${cp}"
+local user_host="${op}$fg_bold[white]%n@%m$reset_color${cp}"
+local ret_status="${op}%?${cp}"
+local hist_no="${op}%h${cp}"
+local smiley="${op}%(?,%{$fg[green]%}>:%)%{$reset_color%},%{$fg[red]%}>:(%{$reset_color%})${cp}"
 
 function ssh_connection() {
   if [[ -n $SSH_CONNECTION ]]; then
@@ -40,11 +40,11 @@ function git_prompt() {
   fi
 }
 
-RPROMPT='${blue_op}%D{%L:%M:%S}${blue_cp}'
+RPROMPT='${op}%D{%L:%M:%S}${cp}'
 if ! which ioreg | grep -q 'not found'; then # mac only >:)      (see source code @ top for linux)
   PROMPT=$'╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > '
 else
   PROMPT=$'╭─${path_p}─${user_host}─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > ' # forced interpolation for \n
 fi
-local cur_cmd="${blue_op}%_${blue_cp}"
+local cur_cmd="${op}%_${cp}"
 PROMPT2="${cur_cmd}> "
