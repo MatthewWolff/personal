@@ -41,7 +41,7 @@ function git_prompt() {
 }
 
 RPROMPT='${op}%D{%L:%M:%S}${cp}'
-if ! which ioreg | grep -q 'not found'; then # mac only >:)      (see source code @ top for linux)
+if which ioreg &>/dev/null; then # mac only >:)      (see source code @ top for linux)
   PROMPT=$'╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > '
 else
   PROMPT=$'╭─${path_p}─${user_host}─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > ' # forced interpolation for \n
