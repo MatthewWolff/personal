@@ -66,9 +66,13 @@ alias gaa='git add --all'
 alias 'gcn!'='git commit -v --no-edit --amend'  # retroactively commit files to last commit
 alias force='git push -u -f origin master'
 alias 'oops!'='gaa && gcn! && force'
-alias ls='ls --color'  # ls -G on mac
+alias gits='git status'
+alias ls='ls -G'  # ls -G on mac
 alias grep='grep --color=auto' 
 alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/start-yarn.sh'
 alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
 alias self='ssh `networksetup -getcomputername`.local'  # mac only?
 alias rc='vim ~/.zshrc'
+alias src='source ~/.zshrc'
+alias root='su -'
+alias l='ls -lAh'
