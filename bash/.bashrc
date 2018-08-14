@@ -29,7 +29,7 @@ function ssh_connection() {
   fi
 }
 
-function arity_env() {
+function work_env() {
   case $HOSTNAME in
     *prod*)     echo "$OB${RED}PRODUCTION$CB$HPIPE";;
     *dev*)      echo "$OB${YELLOW}DEV$CB$HPIPE";;
@@ -57,7 +57,7 @@ PS_GIT="$YELLOW\$PS_BRANCH"
 PS_TIME="\[\033[\$((COLUMNS-10))G\] $OB\t$CB"
 HIST_NO="$OB\!$CB"
 EXIT_CODE="$OB$ERR$CB"
-PS_INFO="$UP_PIPE$(arity_env)$OB$BLUE\w$CB$HPIPE$OB$WHITE\u@\h$CB$HPIPE${HIST_NO} $(ssh_connection)"
+PS_INFO="$UP_PIPE$(work_env)$OB$BLUE\w$CB$HPIPE$OB$WHITE\u@\h$CB$HPIPE${HIST_NO} $(ssh_connection)"
 export PS1="${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}$DOWN_PIPE${EXIT_CODE} > "
 
 ### ETERNAL BASH HISTORY
@@ -77,12 +77,7 @@ export HISTFILE=~/.bash_eternal_history
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 ### PACKAGES
-# added by Anaconda installer
-export PATH=/usr/anaconda/anaconda2/bin:$PATH
-export SPARK_MAJOR_VERSION=2
-
-### TICKET
-kinit -kt /etc/security/keytabs/mwoll-t.keytab mwoll-t@SVC.ARITYPLATFORM.IO  # get ticket
+export PATH=$HOME/scripts:$PATH
 
 ### FUNCTIONS
 addalias()
@@ -92,23 +87,21 @@ addalias()
         source ~/.bashrc
 }
 cd() { builtin cd $* && ls ;}
-hfs() { hadoop fs -$*; }
-recent() { ls -Ut1 $1 | head -n1 | xargs find $1 -name | xargs cat ;}
-checkerr() { recent $1 | grep Exception;}
-func() { grep $1 < ~/.bashrc;}
 
 ### ALIASES
-alias l='ls -lah'
+alias daddy='sudo'
+alias l='ls -lAh'
 alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it doesn't show the working directory
 alias search='grep -rwn * -e '
 alias push='git push -u origin master'
 alias pull='git pull'
+alias gits='git status'
+alias gaa='git add --all'
+alias 'gcn!'='git commit -v --no-edit --amend'
+alias force='git push origin master --force' 
+alias 'oops!'='gaa && gcn! && force'
 alias ls='ls --color'
-alias daddy='sudo'
 alias grep='grep --color=auto'
-alias colors='/home/$USER/.colors.sh'
-alias vim='vi'
-alias kerb='kinit -kt /etc/security/keytabs/mwoll-t.keytab mwoll-t@SVC.ARITYPLATFORM.IO'
 alias rc='vim ~/.bashrc'
-alias mailme='echo "Well something ended" | mailx -s "Done, Boi" matt.wolff@arity.com'
 alias rd='rmdir'
+alias src='source ~/.bashrc'
