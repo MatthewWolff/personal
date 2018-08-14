@@ -30,13 +30,14 @@ plugins=(
 #### USER CONFIGURATION
 source $ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command highlighter
 source $ZSH/oh-my-zsh.sh
+export SAVEHIST=1000000
 
 #### FUNCTIONS
 addalias()
 {
         new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
         echo $new_alias >> ~/.zshrc
-        source ~/.zshrc # order matters
+        source ~/.zshrc
 }
 settheme()
 {
@@ -67,11 +68,11 @@ alias 'gcn!'='git commit -v --no-edit --amend'  # retroactively commit files to 
 alias force='git push -u -f origin master'
 alias 'oops!'='gaa && gcn! && force'
 alias gits='git status'
-alias ls='ls -G'  # ls -G on mac
+alias ls='ls -G'  # ls -G on mac, ls --color on linux
 alias grep='grep --color=auto' 
 alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/start-yarn.sh'
 alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
-alias self='ssh `networksetup -getcomputername`.local'  # mac only?
+alias self='ssh `networksetup -getcomputername`.local'  # mac only
 alias rc='vim ~/.zshrc'
 alias src='source ~/.zshrc'
 alias root='su -'
