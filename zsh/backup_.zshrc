@@ -1,58 +1,17 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
-# Path to your oh-my-zsh installation.
 export ZSH=/Users/matthew/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="wolffy" 
+ZSH_THEME="wolffy"
 
-# Set list of themes to load
-# Setting this variable when ZSH_THEME is random
-# cause zsh load theme from this variable instead of
-# looking in ~/.oh-my-zsh/themes/
-# An empty array has no effect
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" "clean")
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" "clean" "wolffy")
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -70,20 +29,12 @@ source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # valid 
 
 # User configuration
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
 # else
 #   export EDITOR='mvim'
 # fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
@@ -103,44 +54,31 @@ mossy()
 {
   ./moss -l c -b diffFresh/"$1"  diffRevamp/"$1" diffOG/"$1"  diffOG2/"$1"
 }
-comp_check()
-{
-  diff -wy ~/downloads/diffOG/"$1" ~/downloads/diffRevamp/"$1"
-}
-compk()
-{
-  diff -wy ~/downloads/diffOG/kernel/"$1" ~/downloads/diffFresh/kernel/"$1"
-}
-compu()
-{
-  diff -wy ~/downloads/diffOG/user/"$1" ~/downloads/diffFresh/user/"$1"
-}
-compi()
-{
-  diff -wy ~/downloads/diffOG/include/"$1" ~/downloads/diffFresh/include/"$1"
-}
 comp()
 {
   diff -wy ~/downloads/diffOG/"$1" ~/downloads/diffFresh/"$1"
 }
 addalias()
 {
-	new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
-	echo $new_alias >> ~/.bashrc
-	echo $new_alias >> ~/.zshrc
-	source ~/.bashrc;source ~/.zshrc
+  new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
+  echo $new_alias >> ~/.bashrc
+  echo $new_alias >> ~/.zshrc
+  source ~/.bashrc;source ~/.zshrc
 }
 sublime() 
 { 
   open "$@" -a "/Applications/Sublime Text.app/" 
 }
+pycharm()
+{
+  open "$@" -a "/Applications/PyCharm.app"
+}
 settheme()
 {
-  # linenum=$(grep -n "^ZSH_THEME=" ~/.zshrc | cut -f1 -d:)
   sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc
   source ~/.zshrc
 }
-glust()
+send_glust()
 {
   sshpass -f ~/.clearance scp $* mwolff3@transfer.chtc.wisc.edu:/mnt/gluster/mwolff3
 }
@@ -161,6 +99,11 @@ cd()
 ## VARIABLES
 theme=$RANDOM_THEME # only valid if using random theme
 
+##################################################################################################
+## PATH STUFF
+export PATH=$HOME/.scripts:$PATH
+export SAVEHIST=1000000
+export PATH=$HOME/anaconda2/bin:$PATH
 
 ##################################################################################################
 ## ALIASES
@@ -168,7 +111,7 @@ alias cs='sshpass -f ~/.clearance ssh mwolff@royal-08.cs.wisc.edu'
 alias cssftp='sshpass -f ~/.clearance sftp mwolff@royal-08.cs.wisc.edu'
 alias ls='ls -G '
 alias grep='grep --color=auto'
-alias spot='open /Applications/Spotify.app/ --background; sleep 3;'
+alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
 alias song='spotify status'
 alias play='spotify play'
 alias shuf='spotify toggle shuffle'
@@ -180,7 +123,7 @@ alias p='spotify prev'
 alias c='spotify status; spotify share | head -n 2'
 alias ci='spotify info'
 alias i='spotify info'
-alias moderat='if ! pgrep -x "Spotify" > /dev/null; then spot; fi; play artist moderat'
+alias moderat='play artist moderat'
 alias m='moderat'
 alias push='git push -u origin master'
 alias pull='git pull'
@@ -191,13 +134,9 @@ alias rmasl='setopt +o nomatch;
              sudo rm -rf /Users/matthew/Library/Caches/com.spotify.client/Data/* 2> /dev/null'
 alias asl='open /private/var/log/asl/Logs/'
 alias mem='sudo echo -n "";TMP=$(memory); rmasl > /dev/null 2> /dev/null; echo $TMP " ->" $(memory)'
-alias memory='free=$(df -h | grep "/dev/disk1" | grep -oEe "[1-9]{1,2}\.[0-9]Gi|[^0-9][0-9]{2}Gi" | tr "Gi" " ");  echo $(printf "%.3g" $(($free + 0.7))) GB' 
+alias memory='free=$(df -h | grep "/dev/disk1" | grep -oEe "[1-9]{1,2}\.[0-9]Gi|[^0-9][0-9]{2}Gi" | tr "Gi" " " | head -n1);  echo $(printf "%.3g" $(($free + 0.7))) GB' 
 alias csfol='cd ~/Desktop/College/Junior/CS/'
-alias hadoop='sshpass -f ~/.clearance2 ssh mwolff3@systemt.datascientistworkbench.com'
-alias s2='sshpass -f ~/.clearance rsync -aP -v ~/desktop/p2b/xv6/* mwolff@royal-08.cs.wisc.edu:xv6/'
-alias hadoopsftp='sshpass -f ~/.clearance2 sftp mwolff3@systemt.datascientistworkbench.com'
 alias reset_cal='pkill -9 "Calendar";pkill -9 "CalendarAgent"; rm /Users/matthew/Library/Calendars/Calendar\ Cache*; open /Applications/Calendar.app'
-alias matthew='sshpass -f ~/.clearance ssh matthew@192.168.11.2'
 alias search='grep -rwn * -e '
 alias files='diff -rq ~/downloads/diffOG/ ~/downloads/diffFresh/'
 alias tweet='python ~/github/theDNABot/tweet.py'
@@ -207,7 +146,7 @@ alias mcmahon='open "smb://mwolff3:$(cat ~/.clearance)@bact-mcmahonlab.drive.wis
 alias mc='cd ~/desktop/college/research/mcmahon/mapMetasVsRefs'
 alias src='source ~/.bashrc; source ~/.zshrc'
 alias theme='source ~/.zshrc' # picks a random theme
-alias chtc='sshpass -f ~/.clearance ssh mwolff3@submit-3.chtc.wisc.edu'
+alias chtc='ssh mwolff3@submit-3.chtc.wisc.edu'
 alias daddy='sudo'
 alias src='source ~/.bashrc; source ~/.zshrc'
 alias gitforce='git push origin master --force'
@@ -216,3 +155,15 @@ alias vol='cd /Volumes/mcmahonlab/lakes_data/Metagenomes/Mendota/MergedReads-Men
 alias volhome='cd /Volumes/mcmahonlab/home/mwolff3/'
 alias calc='~/.calc/./prog'
 alias self='ssh `networksetup -getcomputername`.local'
+alias DNA='Rscript ~/.scripts/sequence.r'
+alias eden='play artist eden && sleep 0.3 && ci'
+alias rc='vim ~/.zshrc'
+alias matthew='ssh 192.168.168.50'
+alias matthew='ssh 192.168.11.2'
+alias force='git push -u -f origin master'
+alias 'oops!'='gaa && gcn! && force'  # correct a fuck up w/o new commit
+alias gits='git status'
+alias l='ls -lAh'
+alias root='su -'
+alias bfg='java -jar ~/Dev/bfg-1.13.0.jar'
+alias db='cd ~/Desktop/College/Senior/Fall/Databases && jupyter-notebook'
