@@ -27,40 +27,43 @@ plugins=(
   git battery
 )
 
-#### USER CONFIGURATION
+#### USER CONFIGURATION ####
 source $ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command highlighter
 source $ZSH/oh-my-zsh.sh
 export SAVEHIST=1000000
 
-#### FUNCTIONS
-addalias()
-{
-        new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
-        echo $new_alias >> ~/.zshrc
-        source ~/.zshrc
+#### FUNCTIONS ####
+addalias() {
+  new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
+  echo $new_alias >> ~/.zshrc
+  source ~/.zshrc
 }
-settheme()
-{
-    sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc
-    source ~/.zshrc
+settheme() {
+  sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc
+  source ~/.zshrc
 }
-sublime()
-{
-  open "$@" -a "/Applications/Sublime Text.app"
-}
-pycharm()
-{
-  open "$@" -a "/Applications/PyCharm.app"
-}
+sublime() { open "$@" -a "/Applications/Sublime Text.app/"; }
+pycharm() { open "$@" -a "/Applications/PyCharm.app"; }
+chrome() { open "$@" -a "/Applications/Google Chrome.app/"; }
+clion() { open "$@" -a "/Applications/Clion.app"; }
 cd(){ builtin cd $@ && ls; }
 hfs(){ hadoop fs -$*; }
 
-#### ALIASES
+#### ALIASES ####
+# utility
 alias daddy='sudo'
 alias theme='source ~/.zshrc' # picks a random theme if curr theme is "random"
 alias rand='[[ $ZSH_THEME = random ]] || settheme random; source ~/.zshrc'
 alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it doesn't show the working directory
 alias search='grep -rwn * -e '
+alias ls='ls -G'  # ls -G on mac, ls --color on linux
+alias l='ls -lAh'
+alias root='su -'
+alias self='ssh `networksetup -getcomputername`.local'  # mac only
+alias rc='vim ~/.zshrc'
+alias src='source ~/.zshrc'
+alias grep='grep --color=auto' 
+# git
 alias push='git push -u origin master'
 alias pull='git pull'
 alias gaa='git add --all'
@@ -68,12 +71,21 @@ alias 'gcn!'='git commit -v --no-edit --amend'  # retroactively commit files to 
 alias force='git push -u -f origin master'
 alias 'oops!'='gaa && gcn! && force'
 alias gits='git status'
-alias ls='ls -G'  # ls -G on mac, ls --color on linux
-alias grep='grep --color=auto' 
+# shpotify
+alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
+alias song='spotify status'
+alias play='spotify play'
+alias shuf='spotify toggle shuffle'
+alias s='spotify totggle shuffle'
+alias skip='spotify next'
+alias next='spotify next'
+alias prev='spotify prev'
+alias n='spotify next'
+alias p='spotify prev'
+alias pause='spotify pause'
+# hadoop
 alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/start-yarn.sh'
 alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
-alias self='ssh `networksetup -getcomputername`.local'  # mac only
-alias rc='vim ~/.zshrc'
-alias src='source ~/.zshrc'
-alias root='su -'
-alias l='ls -lAh'
+# docker
+alias docker_stop='docker rm $(docker ps -a -q)'
+alias dls='docker image ls'
