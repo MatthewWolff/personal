@@ -18,8 +18,8 @@ function battery_pct_prompt () {
   fi
 }
 
-local op="%{$fg[white]%}[%{$reset_color%}"
-local cp="%{$fg[white]%}]%{$reset_color%}"
+local op="%{$fg[white]%}[%{$fg[green]%}"
+local cp="%{$fg[white]%}]%{$fg[green]%}"
 local path_p="${op}$fg_bold[blue]%~$reset_color${cp}"
 local user_host="${op}$fg_bold[white]%n@%m$reset_color${cp}"
 local ret_status="${op}%?${cp}"
@@ -43,7 +43,7 @@ function git_prompt() {
 RPROMPT='${op}%D{%L:%M:%S}${cp}'
 if which ioreg &>/dev/null; then # mac only >:)      (see source code @ top for linux)
   PROMPT=$'╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > '
-else
+else  # you could hard code which one you use to avoid the delay of an if-statement
   PROMPT=$'╭─${path_p}─${user_host}─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > ' # forced interpolation for \n
 fi
 local cur_cmd="${op}%_${cp}"
