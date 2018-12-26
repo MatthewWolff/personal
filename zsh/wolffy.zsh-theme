@@ -41,10 +41,6 @@ function git_prompt() {
 }
 
 RPROMPT='${op}%D{%L:%M:%S}${cp}'
-if which ioreg &>/dev/null; then # mac only >:)      (see source code @ top for linux)
-  PROMPT=$'╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > '
-else  # you could hard code which one you use to avoid the delay of an if-statement
-  PROMPT=$'╭─${path_p}─${user_host}─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > ' # forced interpolation for \n
-fi
+PROMPT=$'$fg[green]╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > '
 local cur_cmd="${op}%_${cp}"
 PROMPT2="${cur_cmd}> "
