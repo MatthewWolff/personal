@@ -1,28 +1,20 @@
-export ZSH=$HOME/.oh-my-zsh
+export ZSH=/Users/matthew/.oh-my-zsh # ZSH installation path
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="wolffy"
+ZSH_THEME="wolffy" # can set to random too, optionally constrainign the theme pool below
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" "clean" "wolffy")
 
-# Set list of themes to load
-# Setting this variable when ZSH_THEME=random
-# cause zsh load theme from this variable instead of
-# looking in ~/.oh-my-zsh/themes/
-# An empty array has no effect
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+# disable auto-setting terminal title.
+DISABLE_AUTO_TITLE="true"
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
+# enable command auto-correction.
+ENABLE_CORRECTION="true"
 
+# display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-
 plugins=(
   git battery
 )
@@ -32,29 +24,54 @@ source $ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command 
 source $ZSH/oh-my-zsh.sh
 export SAVEHIST=1000000
 
+# .VIMRC
+if ! grep -q wolffy ~/.vimrc; then
+cat << EOF >> ~/.vimrc
+"""wolffy .vimrc begin"""
+syntax on
+set title                       " sets title of window
+set formatoptions=croq          " (fo) influences how vim automatically formats text
+set showmatch                   " (sm) briefly jump to matching bracket when inserting one
+set autoindent                  " (ai)
+set smartindent                 " (si) used in conjunction with autoindent
+set ruler                       " (ru) show the cursor position at all times
+set backspace=indent,eol,start  " (bs) allow backspacing on indents and line breaks
+set linebreak                   " (lbr) wrap long lines at a space instead of in the middle of a word
+set incsearch                   " (is) highlights what you are searching for as you type
+set hlsearch                    " (hls) highlights all instances of the last searched string
+set ignorecase                  " (ic) ignores case in search patterns
+set smartcase                   " (scs) don't ignore case when the search pattern has uppercase
+set shiftwidth=4                " (sw) spaces used in each step of autoindent (as well as << and >>)
+set textwidth=80                " (tw) number of columns before an automatic line break
+function! Strip()               " strip whitespace from end of lines ( call Strip() )
+  :%s/\s*$//g
+  :'^
+endfunction
+"""wolffy .vimrc end"""
+EOF
+fi
+
 #### FUNCTIONS ####
 addalias() {
   new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
   echo $new_alias >> ~/.zshrc
   source ~/.zshrc
 }
-settheme() {
-  sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc
-  source ~/.zshrc
-}
-sublime() { open "$@" -a "/Applications/Sublime Text.app/"; }
-pycharm() { open "$@" -a "/Applications/PyCharm.app"; }
-chrome() { open "$@" -a "/Applications/Google Chrome.app/"; }
-clion() { open "$@" -a "/Applications/Clion.app"; }
+rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.zshrc; }
+sublime() {  open $@ -a "/Applications/Sublime Text.app/"; }
+pycharm() {  open $@ -a "/Applications/PyCharm.app"; }
+chrome()  {  open $@ -a "/Applications/Google Chrome.app/"; }
+clion()   {  open $@ -a "/Applications/Clion.app"; }
+settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 cd(){ builtin cd $@ && ls; }
 hfs(){ hadoop fs -$*; }
 
 #### ALIASES ####
-# utility
+# UTILITY
 alias daddy='sudo'
-alias theme='source ~/.zshrc' # picks a random theme if curr theme is "random"
+alias grep='grep --color=auto' 
 alias rand='[[ $ZSH_THEME = random ]] || settheme random; source ~/.zshrc'
-alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it doesn't show the working directory
+alias shrink='export PS1="\u > "' # shrinks the prompt so that it doesn't show the working directory
 alias search='grep -rwn * -e '
 alias ls='ls -G'  # ls -G on mac, ls --color on linux
 alias l='ls -lAh'
@@ -62,8 +79,8 @@ alias root='su -'
 alias self='ssh `networksetup -getcomputername`.local'  # mac only
 alias rc='vim ~/.zshrc'
 alias src='source ~/.zshrc'
-alias grep='grep --color=auto' 
-# git
+
+# GIT
 alias push='git push -u origin master'
 alias pull='git pull'
 alias gaa='git add --all'
@@ -71,21 +88,29 @@ alias 'gcn!'='git commit -v --no-edit --amend'  # retroactively commit files to 
 alias force='git push -u -f origin master'
 alias 'oops!'='gaa && gcn! && force'
 alias gits='git status'
-# shpotify
-alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
+
+# SPOTIFY
+alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --          background; sleep 3; fi; spotify'
 alias song='spotify status'
 alias play='spotify play'
 alias shuf='spotify toggle shuffle'
-alias s='spotify totggle shuffle'
+alias s='shuf'
 alias skip='spotify next'
 alias next='spotify next'
-alias prev='spotify prev'
-alias n='spotify next'
+alias n='next'
 alias p='spotify prev'
-alias pause='spotify pause'
-# hadoop
+alias c='spotify status; spotify share | head -n 2'
+alias moderat='play artist moderat'
+alias m='moderat'
+alias eden='play artist eden'
+alias e='eden'
+
+# HADOOP
 alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/start-yarn.sh'
 alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
-# docker
+
+# DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'
-alias dls='docker image ls'
+alias dls='docker images'
+alias drun='docker run -i -t'
+alias drm='docker rmi'
