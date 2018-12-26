@@ -1,0 +1,5 @@
+#!/bin/bash
+PORT=$1
+USR=mwolff
+[[ -z $2 ]] && SERVER=royal-08.cs.wisc.edu || SERVER=$2
+sshpass -f /Users/matthew/.clearance ssh -NfL localhost:$PORT:$SERVER:$PORT $USR@$SERVER

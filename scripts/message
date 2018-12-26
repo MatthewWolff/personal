@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+if [[ $# -lt 2 ]]; then echo "Usage: message [address] [message]"; exit 1; fi
+
+recipient=$1 && shift
+message=$*
+email=  # your iMessage email address
+
+ case $recipient in
+	john|John)			recipient="";;
+	me)				recipient=$email;;
+esac
+
+/usr/bin/osascript -e 'tell application "Messages"
+send "'"$message"'" to buddy "'"$recipient"'" of service "'"E:$email"'"
+end tell'
+echo "Sent"

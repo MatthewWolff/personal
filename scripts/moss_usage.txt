@@ -1,0 +1,2 @@
+./moss -l java -b Reversi_base.java -d foo/*.java bar/*.java
+Directions inside of the moss executable

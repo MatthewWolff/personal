@@ -1,0 +1,12 @@
+#!/bin/bash
+RESUME=~/Downloads/MatthewWolffResume.pdf
+CV=~/Downloads/MatthewWolffCV.pdf
+ANON=~/Downloads/anonymous_resume.pdf
+ANONCV=~/Downloads/anonymous_cv.pdf
+DEST=~/Desktop
+which gdrive > /dev/null || { echo 'u gotta do `brew install gdrive`'; exit 1; }
+# update version on google drive
+if [[ -f $RESUME ]]; then gdrive update 1vakVukPnwAhI7in5xxpYtp4ZldAP0QRL $RESUME && mv $_ $DEST; fi
+if [[ -f $ANON ]];   then gdrive update 13zntdcrBVGMTklceQ-7KRGD8tzncJuIy $ANON && mv $_ $DEST; fi
+if [[ -f $CV ]];     then gdrive update 1GTsmeEr5f1-bnFeOfoD_tTHnJVqTBjjm $CV && mv $_ $DEST; fi
+if [[ -f $ANONCV ]]; then gdrive update 1VG5hiBSZ4WR31BXz55huzJi8N2Eo_etA $ANONCV && mv $_ $DEST; fi
