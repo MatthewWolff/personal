@@ -1,0 +1,28 @@
+#!/bin/bash
+set -ex
+
+PDF=MatthewWolffResume.pdf
+CODE=MatthewWolffResume.zip
+LOC=~/Downloads
+
+[[ -f $LOC/$PDF ]] && [[ -f $LOC/$CODE ]]  # must exist
+
+# move files
+cd ~/Desktop/college/resume
+FILE_NUM=$(ls -1 resume_pdfs/ | tail -n1 | grep -oE "[0-9]+")
+VERSION=$(($FILE_NUM - 4))
+
+mv $LOC/$PDF $LOC/$CODE .
+# clear out old
+rm -r gitresume/LaTeX/* &>/dev/null || true
+rm -r gitresume/LaTeX/.[a-zA-Z0-9]* &>/dev/null || true
+# replace
+unzip $CODE -d gitresume/LaTeX/ && rm $CODE
+cp $PDF gitresume/pdf/$VERSION.pdf
+cp $PDF resume_pdfs/$(($FILE_NUM + 1))
+# commit
+cd gitresume
+git add --all
+git commit -m "version $VERSION"
+git push -u origin master
+exit 0

@@ -1,5 +1,5 @@
-# Scraps  
-* A few competitve programming solutions
-* Random code from research + fooling around
-* My personal configurations for zsh, as well as a custom prompt
+# Personal configurations :o  
+* My customizations for oh-my-zsh and vim, as well as a custom prompt
+* a butt-ton of aliases and shell scripting
+  * including my own personal scripts :o 
 ![](/zsh/example.png)
