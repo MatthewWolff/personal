@@ -90,7 +90,8 @@ alias 'oops!'='gaa && gcn! && force'
 alias gits='git status'
 
 # SPOTIFY
-alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --          background; sleep 3; fi; spotify'
+alias spotify='if ! pgrep -x "Spotify" > /dev/null; then
+	       open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
 alias song='spotify status'
 alias play='spotify play'
 alias shuf='spotify toggle shuffle'
