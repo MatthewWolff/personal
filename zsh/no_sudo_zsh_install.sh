@@ -23,10 +23,10 @@ echo "Modified ~/.bashrc to switch into zsh..."
 # Install oh-my-zsh and grab custom .zshrc and wolffy theme files from github
 if [[ ! -d ~/.oh-my-zsh ]]; then
   git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh  &>/dev/null
-  curl -o $HOME/.zshrc https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/.zshrc &>/dev/null
+  curl -o $HOME/.zshrc https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/.zshrc &>/dev/null
   echo "Installed oh-my-zsh..."
 fi
-curl -o $HOME/.oh-my-zsh/themes/wolffy.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Scraps/master/zsh/wolffy.zsh-theme &>/dev/null
+curl -o $HOME/.oh-my-zsh/themes/wolffy.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme &>/dev/null
 echo "Refreshed wolffy.zsh-theme"
 # install syntax highlighting
 [[ -d $HOME/.oh-my-zsh/zsh-syntax-highlighting ]] || \
