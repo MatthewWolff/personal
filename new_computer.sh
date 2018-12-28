@@ -1,0 +1,16 @@
+#/bin/bash
+xcode-select --install
+/usr/bin/ruby -e `curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install`
+chsh -s /bin/zsh
+brew tap caskroom/cask # add another formula repository
+brew cask install anaconda2 anaconda3 java brew mactex & 
+brew install wget zsh r scala apach-spark hadoop &
+Rscript -e 'install.packages("tidyverse")' &
+open https://github.com/fikovnik/ShiftIt/releases/download/version-1.6.6/ShiftIt-1.6.6.zip \
+     https://iterm2.com/downloads/stable/latest \ 
+     https://www.jetbrains.com/pycharm/download/download-thanks.html?platform=mac \
+     https://www.jetbrains.com/idea/download/download-thanks.html?platform=mac \
+     https://www.rstudio.com/products/rstudio/download/#download \
+     https://www.google.com/chrome/
+wget https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/sudo_install_zsh.sh
+bash -x sudo_install_zsh.sh
