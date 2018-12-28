@@ -41,6 +41,6 @@ function git_prompt() {
 }
 
 RPROMPT='${op}%D{%L:%M:%S}${cp}'
-PROMPT=$'$fg[green]╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n╰─${smiley} > '
+PROMPT=$'$fg[green]╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n$fg[green]╰─${smiley} > '
 local cur_cmd="${op}%_${cp}"
 PROMPT2="${cur_cmd}> "
