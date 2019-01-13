@@ -54,6 +54,7 @@ fi
 
 ##################################################################################################
 ## FUNCTIONS
+trash() { mv $* ~/.Trash;}
 addalias()
 {
   new_alias="alias $(sed -e "s/=/='/" -e "s/$/'/" <<< $1)"
@@ -84,6 +85,11 @@ clean_grad()
   for f in GradSchool_*; do mv $f ${f#GradSchool_}; done
   builtin cd $OLDPWD
 }
+set_git_time() { 
+    [[ -z $1 ]] && { echo "Sat Jan 12 19:01 2019 -0600"; exit 1; }
+    GIT_COMMITTER_DATE=$1
+    git commit --amend --no-edit --date $1 
+}
 
 ##################################################################################################
 ## VARIABLES
@@ -94,7 +100,8 @@ export CS_SERVER=rockhopper-08.cs.wisc.edu
 ## PATH STUFF
 export PATH=$HOME/.scripts:$PATH
 export PATH=$HOME/anaconda3/bin:$PATH
-export PATH=/Users/matthew/Desktop/College/research/DESMAN/bin:/Users/matthew/Desktop/College/research/DESMAN/scripts:$PATH
+export PATH=$HOME/Desktop/College/research/DESMAN/bin:$HOME/Desktop/College/research/DESMAN/scripts:$PATH
+export PATH=$HOME/GitHub/twitter:$PATH
 export DESMANHOME=/Users/matthew/Desktop/College/research/DESMAN
 
 ##################################################################################################
@@ -116,9 +123,9 @@ alias g='Rscript /Users/matthew/Desktop/grad_school/grad_school.r' # display gra
 
 # GIT
 alias glist='git diff --cached'
-alias push='git push -u origin master'
-alias pull='git pull'
-alias force='git push -u -f origin master'
+alias push='git push -u origin matthew'
+alias pull='git pull origin matthew'
+alias force='git push -uf origin matthew'
 alias 'oops!'='gaa && gcn! && force'  # correct a fuck up w/o new commit
 alias gits='git status'
 
@@ -127,16 +134,16 @@ alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spot
 alias song='spotify status'
 alias play='spotify play'
 alias shuf='spotify toggle shuffle'
-alias s='shuf'
 alias skip='spotify next'
 alias next='spotify next'
 alias n='next'
 alias p='spotify prev'
 alias c='spotify status; spotify share | head -n 2'
 alias moderat='play artist moderat'
-alias m='moderat'
 alias eden='play artist eden'
+alias m='moderat'
 alias e='eden'
+alias s='play artist shiloh'
 
 # SSH
 alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER"
@@ -180,3 +187,4 @@ alias tweet='python ~/github/theDNABot/tweet.py'
 alias calc='~/.calc/./prog'
 alias trans="Rscript -e 'suppressMessages(library(tidyverse)); read_csv(\"~/.scripts/sex.csv\", col_types=cols())'"
 alias DNA='dna'
+alias tweetas='tweet_as'
