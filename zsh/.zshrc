@@ -1,4 +1,4 @@
-export ZSH=/Users/matthew/.oh-my-zsh # ZSH installation path
+export ZSH=$HOME/.oh-my-zsh # ZSH installation path
 
 ZSH_THEME="wolffy" # can set to random too, optionally constrainign the theme pool below
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" "clean" "wolffy")
