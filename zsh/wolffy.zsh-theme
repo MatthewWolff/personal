@@ -20,7 +20,7 @@ function battery_pct_prompt () {
 local op="%{$fg[white]%}[%{$fg[green]%}"
 local cp="%{$fg[white]%}]%{$fg[green]%}"
 local path_p="${op}$fg_bold[blue]%~$reset_color${cp}"
-local user_host="${op}$fg_bold[white]%n@%m$reset_color${cp}"
+local user_host="${op}$fg_bold[white]%n$reset_color$fg[yellow]@$fg_bold[white]%m$reset_color${cp}"
 local ret_status="${op}%?${cp}"
 local hist_no="${op}%h${cp}"
 local smiley="${op}%(?,%{$fg[green]%}>:%)%{$reset_color%},%{$fg[red]%}>:(%{$reset_color%})${cp}"
