@@ -25,6 +25,7 @@ source $ZSH/oh-my-zsh.sh
 export SAVEHIST=1000000
 
 # .VIMRC
+touch ~/.vimrc
 if ! grep -q wolffy ~/.vimrc; then
 cat << EOF >> ~/.vimrc
 """wolffy .vimrc begin"""

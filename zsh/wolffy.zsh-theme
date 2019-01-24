@@ -1,6 +1,5 @@
-# Created by Matthew Wolff (https://matthewwolff.github.io — https://github.com/MatthewWolff/Scraps/blob/master/zsh/wolffy.zsh-theme)
+# Created by Matthew Wolff (https://matthewwolff.github.io --- https://github.com/MatthewWolff/Scraps/blob/master/zsh/wolffy.zsh-theme)
 # Uses code from the battery plugin (https://github.com/MatthewWolff/oh-my-zsh/blob/master/plugins/battery/battery.plugin.zsh)
-# Is a heavily modified form of Tessilo's prompt (http://tsdh.wordpress.com/2007/12/06/my-funky-zsh-prompt/)
 
 function battery_pct_prompt () {
   if [[ $(ioreg -rc AppleSmartBattery | grep -c '^.*"ExternalConnected"\ =\ No') -eq 1 ]] ; then
