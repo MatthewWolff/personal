@@ -30,21 +30,21 @@ if [[ ! -d $HOME/.oh-my-zsh ]]; then
   stdout "Installed oh-my-zsh..."
 fi
 
-# wolffy theme
-curl -so $HOME/.oh-my-zsh/themes/wolffy.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme
+# wolffy theme -- adjust for linux, highlight root if applicable
+wolffy=$HOME/.oh-my-zsh/themes/wolffy.zsh-theme
+curl -so $wolffy https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme
 if [[ `system` = Linux ]]; then
-  perl -pi -e 's/\$\(battery_pct_prompt.+?\$/\$/' $HOME/.oh-my-zsh/themes/wolffy.zsh-theme # no ioreg
+  perl -pi -e 's/\$\(battery_pct_prompt\).+?\$/\$/' $wolffy # no ioreg available on linux
   perl -pi -e 's/ls -G/ls --color/' $HOME/.zshrc
 fi
+[[ $USER = root ]] && perl -pi -e 's/white(?=\]%n)/red/' $wolffy 
 stdout "Refreshed wolffy.zsh-theme"
 
 # install syntax highlighting
 [[ -d $HOME/.oh-my-zsh/zsh-syntax-highlighting ]] || \
    git clone -q https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/zsh-syntax-highlighting
-grep -q "zsh-syntax-highlighting" ~/.zshrc || \
-  echo "source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> $HOME/.zshrc
 
 # change into zsh
-stdout 'Installation of zsh and oh-my-zsh complete!\n'
-chsh -s /bin/zsh
+stdout 'zsh customization complete!\n'
+chsh -s `which zsh`
 exec zsh -l
