@@ -37,7 +37,7 @@ make install &> /dev/null
 stdout "  -Success"
 
 # automatically swap into zsh
-source ~/.bashrc >> ~/.bash_profile
+echo 'source ~/.bashrc' >> ~/.bash_profile
 [[ -d $INSTALL_LOC/bin ]] && echo "exec $INSTALL_LOC/bin/zsh -l" >> ~/.bashrc
 stdout "Modified ~/.bashrc to switch into zsh..."
 
@@ -48,12 +48,14 @@ if [[ ! -d ~/.oh-my-zsh ]]; then
   stdout "Installed oh-my-zsh..."
 fi
 
-# wolffy theme
-curl -so $HOME/.oh-my-zsh/themes/wolffy.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme
-if [[ `system` = Linux ]]; then
-  perl -pi -e 's/\$\(battery_pct_prompt.+?\$/\$/' $HOME/.oh-my-zsh/themes/wolffy.zsh-theme # no ioreg
+# wolffy theme -- adjust for linux, highlight root if applicable
+wolffy=$HOME/.oh-my-zsh/themes/wolffy.zsh-theme
+curl -so $wolffy https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme
+if [[ $(system) = Linux ]]; then
+  perl -pi -e 's/\$\(battery_pct_prompt\).+?\$/\$/' $wolffy # no ioreg available on linux
   perl -pi -e 's/ls -G/ls --color/' $HOME/.zshrc
 fi
+[[ $USER = root ]] && perl -pi -e 's/white(?=\]%n)/red/' $wolffy
 stdout "Refreshed wolffy.zsh-theme"
 
 # install syntax highlighting

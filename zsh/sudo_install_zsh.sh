@@ -1,12 +1,12 @@
 #!/bin/bash
 system() {
   unameOut="$(uname -s)"
-  case "${unameOut}" in
+  case "$unameOut" in
       Linux*)     machine=Linux;;
       Darwin*)    machine=Mac;;
       CYGWIN*)    machine=Cygwin;;
       MINGW*)     machine=MinGw;;
-      *)          machine="UNKNOWN:${unameOut}";;
+      *)          machine="UNKNOWN:$unameOut";;
   esac
   echo $machine
 }
@@ -14,10 +14,10 @@ WHITE="\033[1m\033[37m"
 RESET="\033[0m"
 stdout() { echo -e $WHITE$*$RESET; }
 
-if ! which zsh > /dev/null; then # need to install zsh
+if ! command -v zsh > /dev/null; then # need to install zsh
   stdout "Installing zsh if on Mac or Linux"
   case "$(system)" in
-    Mac)    which brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && sudo brew install zsh;;
+    Mac)    command -v brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && sudo brew install zsh;;
     Linux)  sudo apt-get install -y zsh &>/dev/null;;
     *)      echo "RIP, unknown system"; exit 1;;
   esac
@@ -33,7 +33,7 @@ fi
 # wolffy theme -- adjust for linux, highlight root if applicable
 wolffy=$HOME/.oh-my-zsh/themes/wolffy.zsh-theme
 curl -so $wolffy https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme
-if [[ `system` = Linux ]]; then
+if [[ $(system) = Linux ]]; then
   perl -pi -e 's/\$\(battery_pct_prompt\).+?\$/\$/' $wolffy # no ioreg available on linux
   perl -pi -e 's/ls -G/ls --color/' $HOME/.zshrc
 fi
@@ -46,5 +46,5 @@ stdout "Refreshed wolffy.zsh-theme"
 
 # change into zsh
 stdout 'zsh customization complete!\n'
-chsh -s `which zsh`
+chsh -s $(command -v zsh)
 exec zsh -l
