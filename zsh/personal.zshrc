@@ -86,9 +86,23 @@ clean_grad()
   builtin cd $OLDPWD
 }
 set_git_time() { 
-    [[ -z $1 ]] && { echo "Sat Jan 12 19:01 2019 -0600"; exit 1; }
-    GIT_COMMITTER_DATE=$1
-    git commit --amend --no-edit --date $1 
+    if [[ -z $1 ]]; then 
+      echo "format: \"Sat Jan 12 19:01 2019 -0600\""
+    else
+      GIT_COMMITTER_DATE="$1"
+      git commit --amend --no-edit --date "$1" 
+      git push -f origin master
+    fi
+}
+colors() {
+echo '
+  _RED = "\033[31m"
+  _RESET = "\033[0m"
+  _BOLDWHITE = "\033[1m\033[37m"
+  _YELLOW = "\033[33m"
+  _CYAN = "\033[36m"
+  _PURPLE = "\033[35m"
+  _CLEAR = "\033[2J"  # clears the terminal screen'
 }
 
 ##################################################################################################
@@ -113,19 +127,21 @@ alias l='ls -lAh'
 alias grep='grep --color=auto'
 alias src='source ~/.zshrc'
 alias root='su -'
-alias shrink='export PS1="\u > "' # shrinks the prompt so that it doesn't show the working directory
+alias shrink='export PS1="$USER > "' # shrinks the prompt so that it doesn't show the working directory
 alias search='grep -rwn * -e '
 alias rc='vim ~/.zshrc'
 alias bfg='java -jar ~/Dev/bfg-1.13.0.jar' # for cleaning up git repos (efficiently)
 alias msg='message'
 alias me='message me'
-alias g='Rscript /Users/matthew/Desktop/grad_school/grad_school.r' # display grad summary
+alias g='Rscript /Users/matthew/Desktop/grad_school/applications/grad_school.r' # display grad summary
+alias find_large='du -sh * 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
+alias jn='jupyter notebook'
 
 # GIT
 alias glist='git diff --cached'
-alias push='git push -u origin matthew'
-alias pull='git pull origin matthew'
-alias force='git push -uf origin matthew'
+alias push='git push -u origin master'
+alias pull='git pull origin master'
+alias force='git push -uf origin master'
 alias 'oops!'='gaa && gcn! && force'  # correct a fuck up w/o new commit
 alias gits='git status'
 
@@ -144,33 +160,39 @@ alias eden='play artist eden'
 alias m='moderat'
 alias e='eden'
 alias s='play artist shiloh'
+alias i='play album interstellar'
+alias x='play artist xxxTentacion'
 
 # SSH
-alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER"
+alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t zsh"
 alias cssftp="sshpass -f ~/.clearance sftp mwolff@$CS_SERVER"
-alias chtc='ssh mwolff3@submit-3.chtc.wisc.edu'
+alias chtc='ssh mwolff3@submit-3.chtc.wisc.edu -t bash'
 alias self='ssh `networksetup -getcomputername`.local'
-alias db='autotunnel databases'
+alias db='autotunnel datasci'
 alias glust='ssh mwolff3@transfer.chtc.wisc.edu'
-alias die='cs -t bash -ci die'
+alias die="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t bash -ci die"
 alias matthew='ssh 192.168.0.186'
+alias liz='ssh mwolff@10.128.254.21 -t zsh'
 
 # DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'
 alias dls='docker images'
 alias drun='docker run -i -t'
 alias drm='docker rmi'
+alias ds='docker run -i -t mwolff3/cs639'
 
 # NAVIGATION
-alias college='cd ~/Desktop/College/Senior/Fall'
 alias dl='cd ~/Downloads'
-alias 301='cd ~/Desktop/CS301/'
+alias 301='cd ~/Desktop/College/Senior/Spring/cs301/'
 alias mc='cd ~/desktop/college/research/mcmahon/'
 alias res='mc'
 alias research='res'
 alias grad='cd ~/Desktop/grad_school/'
 alias csfol='cd ~/Desktop/College/Junior/CS/'
 alias mcmahon='open "smb://mwolff3:$(cat ~/.clearance)@bact-mcmahonlab.drive.wisc.edu/"'
+alias college='cd /Users/matthew/Desktop/College/Senior/spring'
+alias dsa='cd /Users/matthew/Desktop/College/Senior/spring/DataScience/github/assignments'
+alias github='cd ~/github'
 
 # MEMORY MANAGEMENT
 alias rmasl='setopt +o nomatch;

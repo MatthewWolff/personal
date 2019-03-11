@@ -1,42 +1,50 @@
 #!/bin/bash
 system() {
   unameOut="$(uname -s)"
-  case "${unameOut}" in
+  case "$unameOut" in
       Linux*)     machine=Linux;;
       Darwin*)    machine=Mac;;
       CYGWIN*)    machine=Cygwin;;
       MINGW*)     machine=MinGw;;
-      *)          machine="UNKNOWN:${unameOut}";;
+      *)          machine="UNKNOWN:$unameOut";;
   esac
   echo $machine
 }
+WHITE="\033[1m\033[37m"
+RESET="\033[0m"
+stdout() { echo -e $WHITE$*$RESET; }
 
-if ! which zsh > /dev/null; then # need to install zsh
-  echo "Installing zsh if on Mac or Linux"
+if ! command -v zsh > /dev/null; then # need to install zsh
+  stdout "Installing zsh if on Mac or Linux"
   case "$(system)" in
-    Mac*)    which brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && sudo brew install zsh;;
-    Linux*)  sudo apt-get install zsh;;
-    *)       echo "RIP"; exit 1;;
+    Mac)    command -v brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && sudo brew install zsh;;
+    Linux)  sudo apt-get install -y zsh &>/dev/null;;
+    *)      echo "RIP, unknown system"; exit 1;;
   esac
 fi
 
 # install oh-my-zsh and grab custom .zshrc from github
 if [[ ! -d $HOME/.oh-my-zsh ]]; then
-  git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh  &>/dev/null
-  curl -o $HOME/.zshrc https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/.zshrc &>/dev/null
-  echo "Installed oh-my-zsh..."
+  git clone --depth=1 -q https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
+  curl -so $HOME/.zshrc https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/.zshrc
+  stdout "Installed oh-my-zsh..."
 fi
 
-# wolffy theme
-curl -o $HOME/.oh-my-zsh/themes/wolffy.zsh-theme https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme &>/dev/null
-echo "Refreshed wolffy.zsh-theme"
+# wolffy theme -- adjust for linux, highlight root if applicable
+wolffy=$HOME/.oh-my-zsh/themes/wolffy.zsh-theme
+curl -so $wolffy https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/wolffy.zsh-theme
+if [[ $(system) = Linux ]]; then
+  perl -pi -e 's/\$\(battery_pct_prompt\).+?\$/\$/' $wolffy # no ioreg available on linux
+  perl -pi -e 's/ls -G/ls --color/' $HOME/.zshrc
+fi
+[[ $USER = root ]] && perl -pi -e 's/white(?=\]%n)/red/' $wolffy 
+stdout "Refreshed wolffy.zsh-theme"
 
 # install syntax highlighting
 [[ -d $HOME/.oh-my-zsh/zsh-syntax-highlighting ]] || \
-   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/zsh-syntax-highlighting &>/dev/null
-grep -q "zsh-syntax-highlighting" ~/.zshrc || \
-  echo "source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> $HOME/.zshrc
-  
+   git clone -q https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/zsh-syntax-highlighting
+
 # change into zsh
-echo $'Installation of zsh and oh-my-zsh complete!\n'
+stdout 'zsh customization complete!\n'
+chsh -s $(command -v zsh)
 exec zsh -l

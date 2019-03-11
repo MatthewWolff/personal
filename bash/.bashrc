@@ -57,7 +57,7 @@ PS_GIT="$YELLOW\$PS_BRANCH"
 PS_TIME="\[\033[\$((COLUMNS-10))G\] $OB\t$CB"
 HIST_NO="$OB\!$CB"
 EXIT_CODE="$OB$ERR$CB"
-PS_INFO="$UP_PIPE$(work_env)$OB$BLUE\w$CB$HPIPE$OB$WHITE\u@\h$CB$HPIPE${HIST_NO} $(ssh_connection)"
+PS_INFO="$UP_PIPE$(work_env)$OB$BLUE\w$CB$HPIPE$OB$WHITE\u$YELLOW@$WHITE\h$CB$HPIPE${HIST_NO} $(ssh_connection)"
 export PS1="${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}$DOWN_PIPE${EXIT_CODE} > "
 
 ### ETERNAL BASH HISTORY
@@ -80,28 +80,82 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 export PATH=$HOME/scripts:$PATH
 
 ### FUNCTIONS
+trash() { mv $* ~/.Trash;}
 addalias()
 {
-        new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
-        echo $new_alias >> ~/.bashrc
-        source ~/.bashrc
+  new_alias="alias $(sed -e "s/=/='/" -e "s/$/'/" <<< $1)"
+  if grep -q $new_alias ~/.bashrc; then
+    if grep -q "^$new_alias" ~/.bashrc; then echo "alias already present"; exit 1
+    elif grep -q "# $new_alias" ~/.bashrc; then perl -pi -e"s/# (?=$new_alias)//" ~/.bashrc
+    else echo "it's in there somewhere but undefined?"; exit 1; fi
+    source ~/.bashrc
+  else
+    echo $new_alias >> ~/.bashrc
+    source ~/.bashrc
+  fi
 }
+rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.bashrc; }
 cd() { builtin cd $* && ls ;}
 
+### .VIMRC
+if ! grep -q wolffy ~/.vimrc; then
+cat << EOF >> ~/.vimrc
+"""wolffy .vimrc begin"""
+syntax on
+set title                       " sets title of window
+set formatoptions=croq          " (fo) influences how vim automatically formats text
+set showmatch                   " (sm) briefly jump to matching bracket when inserting one
+set autoindent                  " (ai)
+set smartindent                 " (si) used in conjunction with autoindent
+set ruler                       " (ru) show the cursor position at all times
+set backspace=indent,eol,start  " (bs) allow backspacing on indents and line breaks
+set linebreak                   " (lbr) wrap long lines at a space instead of in the middle of a word
+set incsearch                   " (is) highlights what you are searching for as you type
+set hlsearch                    " (hls) highlights all instances of the last searched string
+set ignorecase                  " (ic) ignores case in search patterns
+set smartcase                   " (scs) don't ignore case when the search pattern has uppercase
+set shiftwidth=4                " (sw) spaces used in each step of autoindent (as well as << and >>)
+set textwidth=80                " (tw) number of columns before an automatic line break
+function! Strip()               " strip whitespace from end of lines ( call Strip() )
+  :%s/\s*$//g
+  :'^
+endfunction
+"""wolffy .vimrc end"""
+EOF
+fi
+
 ### ALIASES
+# UTILITY
 alias daddy='sudo'
+alias ls='ls -G'
 alias l='ls -lAh'
-alias shrink='export PS1="\u > "' # temporarily shrinks the prompt so that it doesn't show the working directory
-alias search='grep -rwn * -e '
-alias push='git push -u origin master'
-alias pull='git pull'
-alias gits='git status'
-alias gaa='git add --all'
-alias 'gcn!'='git commit -v --no-edit --amend'
-alias force='git push origin master --force' 
-alias 'oops!'='gaa && gcn! && force'
-alias ls='ls --color'
 alias grep='grep --color=auto'
-alias rc='vim ~/.bashrc'
-alias rd='rmdir'
 alias src='source ~/.bashrc'
+alias root='su -'
+alias shrink='export PS1="$USER > "' # shrinks the prompt so that it doesn't show the working directory
+alias search='grep -rwn * -e '
+alias rc='vim ~/.bashrc'
+alias find_large='du -sh * 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
+alias jn='jupyter notebook'
+
+# GIT
+alias glist='git diff --cached'
+alias push='git push -u origin master'
+alias pull='git pull origin master'
+alias force='git push -uf origin master'
+alias 'oops!'='gaa && gcn! && force'  # correct a fuck up w/o new commit
+alias gits='git status'
+
+# SSH
+alias self='ssh `networksetup -getcomputername`.local' # mac only?
+
+# DOCKER
+alias docker_stop='docker rm $(docker ps -a -q)'
+alias dls='docker images'
+alias drun='docker run -i -t'
+alias drm='docker rmi'
+
+# NAVIGATION
+alias github='cd ~/github'
+
+# OTHER
