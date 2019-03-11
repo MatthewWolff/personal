@@ -97,6 +97,33 @@ addalias()
 rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.bashrc; }
 cd() { builtin cd $* && ls ;}
 
+### .VIMRC
+if ! grep -q wolffy ~/.vimrc; then
+cat << EOF >> ~/.vimrc
+"""wolffy .vimrc begin"""
+syntax on
+set title                       " sets title of window
+set formatoptions=croq          " (fo) influences how vim automatically formats text
+set showmatch                   " (sm) briefly jump to matching bracket when inserting one
+set autoindent                  " (ai)
+set smartindent                 " (si) used in conjunction with autoindent
+set ruler                       " (ru) show the cursor position at all times
+set backspace=indent,eol,start  " (bs) allow backspacing on indents and line breaks
+set linebreak                   " (lbr) wrap long lines at a space instead of in the middle of a word
+set incsearch                   " (is) highlights what you are searching for as you type
+set hlsearch                    " (hls) highlights all instances of the last searched string
+set ignorecase                  " (ic) ignores case in search patterns
+set smartcase                   " (scs) don't ignore case when the search pattern has uppercase
+set shiftwidth=4                " (sw) spaces used in each step of autoindent (as well as << and >>)
+set textwidth=80                " (tw) number of columns before an automatic line break
+function! Strip()               " strip whitespace from end of lines ( call Strip() )
+  :%s/\s*$//g
+  :'^
+endfunction
+"""wolffy .vimrc end"""
+EOF
+fi
+
 ### ALIASES
 # UTILITY
 alias daddy='sudo'
