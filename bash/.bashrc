@@ -156,3 +156,4 @@ alias drm='docker rmi'
 alias github='cd ~/github'
 
 # OTHER
+alias colors='bash ~/.colors.sh'
