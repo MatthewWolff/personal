@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+builtin cd ~/Downloads 
+mkdir -p databases
+rm databases/.DS_Store &>/dev/null || true
+mv `ls Activity*.ipynb 2>/dev/null` databases 2>/dev/null || true
+[[ ! -z $* ]] && mv $* databases
+sshpass -f ~/.clearance rsync -aPz databases/ mwolff@royal-08.cs.wisc.edu:databases/ 
