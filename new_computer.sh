@@ -14,5 +14,4 @@ open https://github.com/fikovnik/ShiftIt/releases/download/version-1.6.6/ShiftIt
      https://www.jetbrains.com/idea/download/download-thanks.html?platform=mac \
      https://www.rstudio.com/products/rstudio/download/#download \
      https://www.google.com/chrome/
-wget https://raw.githubusercontent.com/MatthewWolff/Personal/master/zsh/sudo_install_zsh.sh
-bash -x sudo_install_zsh.sh
+bash <(curl -fsSL zsh.wolff.sh)
