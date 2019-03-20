@@ -1,3 +1,4 @@
+# ZSH RC
 export ZSH=/Users/matthew/.oh-my-zsh # ZSH installation path
 
 ZSH_THEME="wolffy" # can set to random too, optionally constrainign the theme pool below
@@ -94,15 +95,16 @@ set_git_time() {
       git push -f origin master
     fi
 }
-colors() {
-echo '
-  _RED = "\033[31m"
-  _RESET = "\033[0m"
-  _BOLDWHITE = "\033[1m\033[37m"
-  _YELLOW = "\033[33m"
-  _CYAN = "\033[36m"
-  _PURPLE = "\033[35m"
-  _CLEAR = "\033[2J"  # clears the terminal screen'
+cols() {
+  cat <<END
+    '_RED = \033[31m
+    _RESET = \033[0m
+    _BOLDWHITE = \033[1m\033[37m
+    _YELLOW = \033[33m
+    _CYAN = \033[36m
+    _PURPLE = \033[35m
+    _CLEAR = \033[2J  # clears the terminal screen'
+END
 }
 
 ##################################################################################################
@@ -127,7 +129,7 @@ alias l='ls -lAh'
 alias grep='grep --color=auto'
 alias src='source ~/.zshrc'
 alias root='su -'
-alias shrink='export PS1="$USER > "' # shrinks the prompt so that it doesn't show the working directory
+alias shrink='export PS1="$USER > "' # shrinks the prompt so that it doesnt show the working directory
 alias search='grep -rwn * -e '
 alias rc='vim ~/.zshrc'
 alias bfg='java -jar ~/Dev/bfg-1.13.0.jar' # for cleaning up git repos (efficiently)
@@ -185,7 +187,6 @@ alias ds='docker run -i -t mwolff3/cs639'
 alias dl='cd ~/Downloads'
 alias 301='cd ~/Desktop/College/Senior/Spring/cs301/'
 alias mc='cd ~/desktop/college/research/mcmahon/'
-alias res='mc'
 alias research='res'
 alias grad='cd ~/Desktop/grad_school/'
 alias csfol='cd ~/Desktop/College/Junior/CS/'
@@ -210,3 +211,5 @@ alias calc='~/.calc/./prog'
 alias trans="Rscript -e 'suppressMessages(library(tidyverse)); read_csv(\"~/.scripts/sex.csv\", col_types=cols())'"
 alias DNA='dna'
 alias tweetas='tweet_as'
+alias movies='open ~/Library/MATLAB/CS\ 368/'
+alias obfuscate='bash-obfuscate'

@@ -4,11 +4,13 @@ if [[ $# -lt 2 ]]; then echo "Usage: message [address] [message]"; exit 1; fi
 
 recipient=$1 && shift
 message=$*
-email=  # your iMessage email address
+email= # TODO: your imessage email
 
  case $recipient in
-	john|John)			recipient="";;
-	me)				recipient=$email;;
+	name)	recipient="+123456789"
+	name)	recipient="+123456789"
+	name)	recipient="+123456789"
+	name)	recipient="+123456789"
 esac
 
 /usr/bin/osascript -e 'tell application "Messages"

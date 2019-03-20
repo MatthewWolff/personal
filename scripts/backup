@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+git_loc=$HOME/github/personal
+scripts=$HOME/.scripts
+
+# temporary files for files that will have redactions
+moss=$(mktemp)
+message=$(mktemp)
+timestamp=$(date '+%Y-%m-%d')
+clean_up() { rm $moss $message; }
+trap clean_up EXIT
+
+check_rc() {
+  builtin cd zsh/
+  diff -q $HOME/.zshrc personal.zshrc &>/dev/null || cp $HOME/.zshrc personal.zshrc
+  builtin cd ..
+}
+
+check_scripts() {
+  builtin cd scripts/
+  perl -pe 's/(?<=$userid=)[0-9]+;/; # get ur own >:(/g' $scripts/moss > $moss
+  perl -pe 's/.*\).*recipient=.*;;/\tname)\trecipient="+123456789"/g;
+  			s/(?<=email=).*/ # TODO: your imessage email/g' $scripts/message > $message
+  for s in $scripts/*; do
+  	f=${s#$scripts/}
+  	# handle redacted files differently
+    if [[ $f = 'moss' || $f = 'message' ]]; then
+      eval "diff $`echo $f` $f &>/dev/null || cp $`echo $f` $f"
+    else
+      diff -q $scripts/$f $f &>/dev/null || cp $scripts/$f .
+    fi
+  done
+  builtin cd ..
+}
+
+update_repo() {
+  git add --all
+  scripts=$(for f in $(git status --porcelain | sed 's/^...//'); do echo -n "-m '$f' "; done)
+  git commit -m "$timestamp -- backed up .zshrc && scripts" $scripts
+  git push -u origin master &>/dev/null
+}
+
+main() {
+  builtin cd $git_loc
+  git pull origin master >/dev/null
+
+  check_rc
+  check_scripts
+  update_repo
+}
+
+main && exit 0
