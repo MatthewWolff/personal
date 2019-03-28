@@ -95,7 +95,7 @@ set_git_time() {
       git push -f origin master
     fi
 }
-cols() {
+color() {
   cat <<END
     '_RED = \033[31m
     _RESET = \033[0m
@@ -213,3 +213,4 @@ alias DNA='dna'
 alias tweetas='tweet_as'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias obfuscate='bash-obfuscate'
+alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
