@@ -116,9 +116,7 @@ export CS_SERVER=rockhopper-08.cs.wisc.edu
 ## PATH STUFF
 export PATH=$HOME/.scripts:$PATH
 export PATH=$HOME/anaconda3/bin:$PATH
-export PATH=$HOME/Desktop/College/research/DESMAN/bin:$HOME/Desktop/College/research/DESMAN/scripts:$PATH
 export PATH=$HOME/GitHub/twitter:$PATH
-export DESMANHOME=/Users/matthew/Desktop/College/research/DESMAN
 
 ##################################################################################################
 ## ALIASES
@@ -194,6 +192,8 @@ alias mcmahon='open "smb://mwolff3:$(cat ~/.clearance)@bact-mcmahonlab.drive.wis
 alias college='cd /Users/matthew/Desktop/College/Senior/spring'
 alias dsa='cd /Users/matthew/Desktop/College/Senior/spring/DataScience/github/assignments'
 alias github='cd ~/github'
+alias movies='open ~/Library/MATLAB/CS\ 368/'
+alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
 
 # MEMORY MANAGEMENT
 alias rmasl='setopt +o nomatch;
@@ -211,6 +211,4 @@ alias calc='~/.calc/./prog'
 alias trans="Rscript -e 'suppressMessages(library(tidyverse)); read_csv(\"~/.scripts/sex.csv\", col_types=cols())'"
 alias DNA='dna'
 alias tweetas='tweet_as'
-alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias obfuscate='bash-obfuscate'
-alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
