@@ -1,17 +1,30 @@
 #!/bin/bash
 set -x
+
+# primary utilities (xcode + brew)
 xcode-select --install
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-chsh -s /bin/zsh
+
+# brew installs
+brew update
 brew tap caskroom/cask # add another formula repository
-brew cask install anaconda java brew mactex &
-brew install python3 wget zsh r scala apach-spark hadoop &
-# echo 'export PATH=/usr/local/anaconda3/bin:$PATH' >> ~/.zsh
+brew install --with-x11 homebrew/science/r # install R from an additional tap
+brew cask install anaconda java iterm2 visual-studio-code gimp rstudio pycharm \
+     spectacle google-chrome spotify sublime-text # first line: dev tools \\ second line: utility
+brew install wget zsh scala apach-spark hadoop 
+brew cleanup
+
+# r packages
 Rscript -e 'install.packages("tidyverse")' &
-open https://github.com/fikovnik/ShiftIt/releases/download/version-1.6.6/ShiftIt-1.6.6.zip \
-     https://iterm2.com/downloads/stable/latest \
-     https://www.jetbrains.com/pycharm/download/download-thanks.html?platform=mac \
-     https://www.jetbrains.com/idea/download/download-thanks.html?platform=mac \
-     https://www.rstudio.com/products/rstudio/download/#download \
-     https://www.google.com/chrome/
+
+# chrome extensions
+open https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh \
+     https://chrome.google.com/webstore/detail/adblock/gighmmpiobklfepjocnamgkkbiglidom \
+     https://chrome.google.com/webstore/detail/backspace-to-go-back/nlffgllnjjkheddehpolbanogdeaogbc \ 
+     -a "/Applications/Google Chrome.app/"
+
+# customization
+mkdir $HOME/scripts $HOME/development
+
+# oh-my-zsh setup
 bash <(curl -fsSL zsh.wolff.sh)
