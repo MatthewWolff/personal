@@ -25,6 +25,9 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # valid command highlighter
 export SAVEHIST=1000000
+export PATH=/usr/local/anaconda3/bin:$PATH
+export PATH=$HOME/.scripts:$PATH
+export PATH=$HOME/GitHub/twitter:$PATH
 
 # .VIMRC
 if ! grep -q wolffy ~/.vimrc; then
@@ -56,6 +59,8 @@ fi
 ##################################################################################################
 ## FUNCTIONS
 trash() { mv $* ~/.Trash;}
+cd() { builtin cd $@ && ls; }
+rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.zshrc; }
 addalias()
 {
   new_alias="alias $(sed -e "s/=/='/" -e "s/$/'/" <<< $1)"
@@ -70,22 +75,13 @@ addalias()
     source ~/.zshrc
   fi
 }
-rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.zshrc; }
-sublime() {  open $@ -a "/Applications/Sublime Text.app/"; }
+sublime() {  open $@ -a "/Applications/Sublime Text.app"; }
 pycharm() {  open $@ -a "/Applications/PyCharm.app"; }
-chrome()  {  open $@ -a "/Applications/Google Chrome.app/"; }
+chrome()  {  open $@ -a "/Applications/Google Chrome.app"; }
 clion()   {  open $@ -a "/Applications/Clion.app"; }
+gimp()    {  open $@ -a "/Applications/GIMP-2.10.app"; }
+vscode()  {  open $@ -a "/Applications/Visual Studio Code.app"; }
 settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
-send_glust() { scp $* mwolff3@transfer.chtc.wisc.edu:/mnt/gluster/mwolff3; }
-get_glust() { scp mwolff3@transfer.chtc.wisc.edu:/mnt/gluster/mwolff3/$1 .; }
-cd() { builtin cd $@ && ls; }
-clean_grad()
-{
-  mv ~/Downloads/GradSchool* ~/Desktop/grad_school/latex_essays/ &>/dev/null
-  builtin cd $_
-  for f in GradSchool_*; do mv $f ${f#GradSchool_}; done
-  builtin cd $OLDPWD
-}
 set_git_time() { 
     if [[ -z $1 ]]; then 
       echo "format: \"Sat Jan 12 19:01 2019 -0600\""
@@ -96,27 +92,34 @@ set_git_time() {
     fi
 }
 color() {
-  cat <<END
-    '_RED = \033[31m
-    _RESET = \033[0m
-    _BOLDWHITE = \033[1m\033[37m
-    _YELLOW = \033[33m
-    _CYAN = \033[36m
-    _PURPLE = \033[35m
-    _CLEAR = \033[2J  # clears the terminal screen'
+  cat <<"END"
+_RED = \033[31m
+_RESET = \033[0m
+_BOLDWHITE = \033[1m\033[37m
+_YELLOW = \033[33m
+_CYAN = \033[36m
+_PURPLE = \033[35m
+_CLEAR = \033[2J  # clears the terminal screen
 END
+}
+memory() {
+	free=$(df -h | grep "/dev/disk1" | grep -oEe "[1-9]{1,2}\.[0-9]Gi|[^0-9][0-9]{2}Gi" | tr "Gi" " " | head -n1)
+	echo "$(printf "%.3g" $(($free + 0.7))) GB"
+}
+mem() {
+	TMP=$(memory)
+	setopt +o nomatch
+	sudo rm -rf /private/var/log/asl/*.asl /private/var/log/asl/Logs/* \
+				~/Library/Containers/com.apple.mail/Data/Library/Logs/Mail/*.txt \
+				~/Library/Caches/com.spotify.client/Data/* \
+				&>/dev/null
+	echo "$TMP -> $(memory)"
 }
 
 ##################################################################################################
 ## VARIABLES
 theme=$RANDOM_THEME # only valid if using random theme
 export CS_SERVER=rockhopper-08.cs.wisc.edu
-
-##################################################################################################
-## PATH STUFF
-export PATH=$HOME/.scripts:$PATH
-export PATH=$HOME/anaconda3/bin:$PATH
-export PATH=$HOME/GitHub/twitter:$PATH
 
 ##################################################################################################
 ## ALIASES
@@ -162,14 +165,14 @@ alias e='eden'
 alias s='play artist shiloh'
 alias i='play album interstellar'
 alias x='play artist xxxTentacion'
+alias vu='spotify vol up'
+alias vd='spotify vol down'
 
 # SSH
 alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t zsh"
 alias cssftp="sshpass -f ~/.clearance sftp mwolff@$CS_SERVER"
-alias chtc='ssh mwolff3@submit-3.chtc.wisc.edu -t bash'
-alias self='ssh `networksetup -getcomputername`.local'
+alias self='ssh $(networksetup -getcomputername).local'
 alias db='autotunnel datasci'
-alias glust='ssh mwolff3@transfer.chtc.wisc.edu'
 alias die="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t bash -ci die"
 alias matthew='ssh 192.168.0.186'
 alias liz='ssh mwolff@10.128.254.21 -t zsh'
@@ -183,27 +186,15 @@ alias ds='docker run -i -t mwolff3/cs639'
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
-alias 301='cd ~/Desktop/College/Senior/Spring/cs301/'
+alias 301='cd ~/Desktop/College/4Senior/Spring/cs301/'
 alias mc='cd ~/desktop/college/research/mcmahon/'
 alias research='res'
 alias grad='cd ~/Desktop/grad_school/'
-alias csfol='cd ~/Desktop/College/Junior/CS/'
-alias mcmahon='open "smb://mwolff3:$(cat ~/.clearance)@bact-mcmahonlab.drive.wisc.edu/"'
-alias college='cd /Users/matthew/Desktop/College/Senior/spring'
-alias dsa='cd /Users/matthew/Desktop/College/Senior/spring/DataScience/github/assignments'
+alias college='cd ~/Desktop/College/4Senior/spring'
+alias dsa='cd ~/Desktop/College/4Senior/spring/DataScience/assignments'
 alias github='cd ~/github'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
-
-# MEMORY MANAGEMENT
-alias rmasl='setopt +o nomatch;
-	     sudo rm /private/var/log/asl/*.asl 2> /dev/null;
-	     sudo rm /private/var/log/asl/Logs/* 2> /dev/null;
-	     sudo rm ~/Library/Containers/com.apple.mail/Data/Library/Logs/Mail/*.txt 2> /dev/null;
-             sudo rm -rf ~/Library/Caches/com.spotify.client/Data/* 2> /dev/null'
-alias asl='open /private/var/log/asl/Logs/'
-alias mem='sudo echo -n "";TMP=$(memory); rmasl > /dev/null 2> /dev/null; echo $TMP " ->" $(memory)'
-alias memory='free=$(df -h | grep "/dev/disk1" | grep -oEe "[1-9]{1,2}\.[0-9]Gi|[^0-9][0-9]{2}Gi" | tr "Gi" " " | head -n1);  echo $(printf "%.3g" $(($free + 0.7))) GB'
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
