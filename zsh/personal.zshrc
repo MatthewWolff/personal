@@ -75,7 +75,6 @@ addalias()
     source ~/.zshrc
   fi
 }
-sublime() {  open $@ -a "/Applications/Sublime Text.app"; }
 pycharm() {  open $@ -a "/Applications/PyCharm.app"; }
 chrome()  {  open $@ -a "/Applications/Google Chrome.app"; }
 clion()   {  open $@ -a "/Applications/Clion.app"; }
@@ -125,26 +124,27 @@ export CS_SERVER=rockhopper-08.cs.wisc.edu
 ## ALIASES
 # UTILITY
 alias daddy='sudo'
+alias please='sudo'
 alias ls='ls -G '
 alias l='ls -lAh'
 alias grep='grep --color=auto'
 alias src='source ~/.zshrc'
 alias root='su -'
-alias shrink='export PS1="$USER > "' # shrinks the prompt so that it doesnt show the working directory
+alias shrink="export PS1=\"$USER > \"" # shrinks the prompt so that it doesnt show the working directory
 alias search='grep -rwn * -e '
 alias rc='vim ~/.zshrc'
-alias bfg='java -jar ~/Dev/bfg-1.13.0.jar' # for cleaning up git repos (efficiently)
 alias msg='message'
 alias me='message me'
 alias g='Rscript /Users/matthew/Desktop/grad_school/applications/grad_school.r' # display grad summary
 alias find_large='du -sh * 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
 alias jn='jupyter notebook'
+alias sublime=subl
 
 # GIT
 alias glist='git diff --cached'
-alias push='git push -u origin master'
-alias pull='git pull origin master'
-alias force='git push -uf origin master'
+alias push='git push -u origin $(git_current_branch)'
+alias pull='git pull origin $(git_current_branch)'
+alias force='git push -uf origin $(git_current_branch)'
 alias 'oops!'='gaa && gcn! && force'  # correct a fuck up w/o new commit
 alias gits='git status'
 
@@ -167,6 +167,7 @@ alias i='play album interstellar'
 alias x='play artist xxxTentacion'
 alias vu='spotify vol up'
 alias vd='spotify vol down'
+alias disc='spotify play uri spotify:playlist:37i9dQZEVXcHX1sGVICYXF'
 
 # SSH
 alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t zsh"
@@ -175,7 +176,6 @@ alias self='ssh $(networksetup -getcomputername).local'
 alias db='autotunnel datasci'
 alias die="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t bash -ci die"
 alias matthew='ssh 192.168.0.186'
-alias liz='ssh mwolff@10.128.254.21 -t zsh'
 
 # DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'

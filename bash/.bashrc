@@ -92,7 +92,7 @@ addalias()
   fi
 }
 rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.bashrc; }
-cd() { builtin cd $* && ls ;}
+cd() { builtin cd $* && ls -G;}
 
 ### .VIMRC
 if ! grep -q wolffy ~/.vimrc; then
@@ -124,12 +124,13 @@ fi
 ### ALIASES
 # UTILITY
 alias daddy='sudo'
+alias please='sudo'
 alias ls='ls -G'
 alias l='ls -lAh'
 alias grep='grep --color=auto'
 alias src='source ~/.bashrc'
 alias root='su -'
-alias shrink='export PS1="$USER > "' # shrinks the prompt so that it doesn't show the working directory
+alias shrink="export PS1=\"$USER > \"" # shrinks the prompt so that it doesn't show the working directory
 alias search='grep -rwn * -e '
 alias rc='vim ~/.bashrc'
 alias find_large='du -sh * 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
@@ -137,9 +138,9 @@ alias jn='jupyter notebook'
 
 # GIT
 alias glist='git diff --cached'
-alias push='git push -u origin master'
-alias pull='git pull origin master'
-alias force='git push -uf origin master'
+alias push='git push -u origin $(git_current_branch)'
+alias pull='git pull origin $(git_current_branch)'
+alias force='git push -uf origin $(git_current_branch)'
 alias 'oops!'='gaa && gcn! && force'  # correct a fuck up w/o new commit
 alias gits='git status'
 
