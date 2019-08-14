@@ -2,18 +2,27 @@
 command -v atom >/dev/null || brew install atom
 
 packages=(
-	open-recent
-	sublime-block-comment
-	sublime-style-column-selection
-	linter
-	atom-beautify
-	pigments
-	autoclose-html
-	markdown-preview-plus
-	tablr
+  atom-beautify
+  atom-notes
+  autoclose-html
+  busy-signal
+  intentions
+  linter
+  linter-csslint
+  linter-htmlhint
+  linter-jsonlint
+  linter-markdown
+  linter-shellcheck
+  linter-ui-default
+  markdown-preview-plus
+  open-recent
+  pigments
+  sublime-block-comment
+  tablr
+  teletype
 )
 
 for package in "${packages[@]}"; do
-	apm install $package &
-	open https://atom.io/packages/$package
+  apm install $package &
+  # open https://atom.io/packages/$package
 done && wait
