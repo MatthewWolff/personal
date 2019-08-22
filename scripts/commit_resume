@@ -19,7 +19,7 @@ rm -r gitresume/LaTeX/.[a-zA-Z0-9]* &>/dev/null || true
 # replace
 unzip $CODE -d gitresume/LaTeX/ && rm $CODE
 cp $PDF gitresume/pdf/$VERSION.pdf
-cp $PDF resume_pdfs/$(($FILE_NUM + 1))
+cp $PDF resume_pdfs/$(($FILE_NUM + 1)).pdf
 # commit
 cd gitresume
 git add --all
