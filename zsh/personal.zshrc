@@ -31,7 +31,7 @@ export PATH=$HOME/GitHub/twitter:$PATH
 
 # .VIMRC
 if ! grep -q wolffy ~/.vimrc; then
-cat << EOF >> ~/.vimrc 
+cat << EOF >> ~/.vimrc
 """wolffy .vimrc begin"""
 syntax on
 set title                       " sets title of window
@@ -81,12 +81,12 @@ clion()   {  open $@ -a "/Applications/Clion.app"; }
 gimp()    {  open $@ -a "/Applications/GIMP-2.10.app"; }
 vscode()  {  open $@ -a "/Applications/Visual Studio Code.app"; }
 settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
-set_git_time() { 
-    if [[ -z $1 ]]; then 
+set_git_time() {
+    if [[ -z $1 ]]; then
       echo "format: \"Sat Jan 12 19:01 2019 -0600\""
     else
       GIT_COMMITTER_DATE="$1"
-      git commit --amend --no-edit --date "$1" 
+      git commit --amend --no-edit --date "$1"
       git push -f origin master
     fi
 }
@@ -153,21 +153,25 @@ alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spot
 alias song='spotify status'
 alias play='spotify play'
 alias shuf='spotify toggle shuffle'
-alias skip='spotify next'
 alias next='spotify next'
-alias n='next'
-alias p='spotify prev'
+alias prev='spotift prev'
+alias skip=next
+alias n=next
+alias p=prev
 alias c='spotify status; spotify share | head -n 2'
-alias moderat='play artist moderat'
-alias eden='play artist eden'
-alias m='moderat'
-alias e='eden'
-alias s='play artist shiloh'
-alias i='play album interstellar'
-alias x='play artist xxxTentacion'
+alias disc='spotify play uri spotify:playlist:37i9dQZEVXcHX1sGVICYXF >/dev/null && echo playing discovery playlist...'
+alias interstellar='spotify play uri spotify:album:3N8fGhRcHWqyy0SfWa92H0 >/dev/null && echo playing interstellar soundtrack...'
+alias moderat='spotify play uri spotify:artist:2exkZbmNqMKnT8LRWuxWgy >/dev/null && echo playing moderat...'
+alias shiloh='spotify play uri spotify:artist:1wxPItEzr7U7rGSMPqZ25r >/dev/null && echo playing shiloh dynasty...'
+alias eden='spotify play uri spotify:artist:1t20wYnTiAT0Bs7H1hv9Wt >/dev/null && echo playing eden...'
+alias xxx='spotify play uri spotify:artist:15UsOTVnJzReFVN1VCnxy4 >/dev/null && echo playing xxxTentacion...'
+alias i=interstellar
+alias m=moderat
+alias s=shiloh
+alias e=eden
+alias x=xxx  # xxxTentacion
 alias vu='spotify vol up'
 alias vd='spotify vol down'
-alias disc='spotify play uri spotify:playlist:37i9dQZEVXcHX1sGVICYXF'
 
 # SSH
 alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t zsh"

@@ -22,14 +22,14 @@ start_timer() { sleep $TIMEOUT_SECONDS && echo $'\nNotebook initialization timed
 stop_timer() { kill $timer_pid &>/dev/null; wait $! &>/dev/null; }
 check_timer() { kill -s 0 $timer_pid &>/dev/null && { echo -n "."; sleep 0.5; }; }
 notebook_inactive() { ! grep -q 'localhost:' $LOG_FILE; }
-start_timer & timer_pid=$! 
-while notebook_inactive; do 
-  check_timer || exit 1   
-done && echo 
+start_timer & timer_pid=$!
+while notebook_inactive; do
+  check_timer || exit 1
+done && echo
 stop_timer
 
 # after notebook has started up, locate notebook information from log
-tmp_port=`perl -nle "print $& if m{(?<=localhost:)[0-9]+}" $LOG_FILE | head -n1` 
+tmp_port=`perl -nle "print $& if m{(?<=localhost:)[0-9]+}" $LOG_FILE | head -n1`
 notebook_link=`grep -oe 'http://localhost:.*' $LOG_FILE | head -1 | xargs`  # trim output
 token=`grep -o "\?.*"<<< $notebook_link`
 
@@ -37,7 +37,7 @@ printf $white "Notebook is at $notebook_link"
 printf $yellow "This notebook will not terminate with ctrl-c. You will need to go on $SERVER to kill it."
 echo
 printf $yellow 'KILLING NOTEBOOKS: ssh to server and call "top -U $USER" to see active processes.'
-printf $yellow 'Find the corresponding process ID for your notebook and call "kill <ID>"' 
+printf $yellow 'Find the corresponding process ID for your notebook and call "kill <ID>"'
 echo
 sshpass -f ~/.clearance ssh -NfL localhost:$tmp_port:$SERVER:$tmp_port $USR@$SERVER 2>/dev/null # tunnel notebook to localhost
 open http://localhost:$tmp_port/tree$folder$token
