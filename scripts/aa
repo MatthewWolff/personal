@@ -1,0 +1,22 @@
+#!/usr/local/bin/Rscript
+# word to RNA to DNA
+suppressMessages(library(dplyr))
+DNA <- commandArgs(TRUE) %>% gsub("[^ACTG]", "", .)
+codons <- c(rep("A", 4), rep("R", 6), rep("N", 2), rep("D", 2), rep("C", 2), rep("Q", 2), rep("E", 2), rep("G", 4), rep("H", 2), rep("I", 3), rep("L", 6), rep("K", 2), "M", rep("F", 2), rep("P", 4), rep("S", 6), rep("T", 4), "W", rep("Y", 2), rep("V", 4), rep("*", 3))
+names(codons) <- c("GCU", "GCC", "GCA", "GCG", "CGU", "CGC", "CGA", "CGG", "AGA", "AGG", "AAU", "AAC", "GAU", "GAC", "UGU", "UGC", "CAA", "CAG", "GAA", "GAG", "GGU", "GGC", "GGA", "GGG", "CAU", "CAC", "AUU", "AUC", "AUA", "UUA", "UUG", "CUU", "CUC", "CUA", "CUG", "AAA", "AAG", "AUG", "UUU", "UUC", "CCU", "CCC", "CCA", "CCG", "UCU", "UCC", "UCA", "UCG", "AGU", "AGC", "ACU", "ACC", "ACA", "ACG", "UGG", "UAU", "UAC", "GUU", "GUC", "GUA", "GUG", "UAA", "UGA", "UAG")
+chunks <- function(x,n) split(x, cut(seq_along(x), n, labels = FALSE)) 
+
+DNA <- unlist(strsplit(DNA,""))
+DNA_can_be_split_into_codons <- length(DNA) %/% 3 == length(DNA) / 3
+stopifnot(DNA_can_be_split_into_codons)
+
+RNA <- DNA
+RNA[which(DNA == "G")] <- "C"
+RNA[which(DNA == "C")] <- "G"
+RNA[which(DNA == "A")] <- "U"
+RNA[which(DNA == "T")] <- "A"
+triplets <- chunks(RNA, length(RNA) %/% 3) %>% 
+  lapply(function(x) paste0(x, collapse="")) %>% 
+  unname %>% unlist
+AA <- codons[triplets] %>% unname %>% paste0(collapse="")
+cat("Amino Acid Sequence:", AA, sep="\n")
