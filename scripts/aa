@@ -11,10 +11,11 @@ DNA_can_be_split_into_codons <- length(DNA) %/% 3 == length(DNA) / 3
 stopifnot(DNA_can_be_split_into_codons)
 
 RNA <- DNA
-RNA[which(DNA == "G")] <- "C"
-RNA[which(DNA == "C")] <- "G"
-RNA[which(DNA == "A")] <- "U"
-RNA[which(DNA == "T")] <- "A"
+# RNA[which(DNA == "G")] <- "C"
+# RNA[which(DNA == "C")] <- "G"
+# RNA[which(DNA == "A")] <- "U"
+# RNA[which(DNA == "T")] <- "A"
+RNA[which(DNA == "T")] <- "U"
 triplets <- chunks(RNA, length(RNA) %/% 3) %>% 
   lapply(function(x) paste0(x, collapse="")) %>% 
   unname %>% unlist

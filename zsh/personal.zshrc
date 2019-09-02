@@ -80,6 +80,7 @@ chrome()  {  open $@ -a "/Applications/Google Chrome.app"; }
 clion()   {  open $@ -a "/Applications/Clion.app"; }
 gimp()    {  open $@ -a "/Applications/GIMP-2.10.app"; }
 vscode()  {  open $@ -a "/Applications/Visual Studio Code.app"; }
+rstudio() {  open $@ -a "/Applications/Rstudio.app"; }
 settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 set_git_time() {
     if [[ -z $1 ]]; then
