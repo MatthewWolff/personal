@@ -116,6 +116,25 @@ mem() {
 	echo "$TMP -> $(memory)"
 }
 
+swap() {
+	mv "$1" "$1.swp"
+	mv "$2" "$1"
+	mv "$1.swp" "$2" 
+	echo "swapped $1 and $2"
+}
+
+nancygit() {
+  if grep -q Matthew ~/.gitconfig; then
+    perl -pi -e 's/Matthew Wolff/Nancy Pham/g' ~/.gitconfig
+    perl -pi -e 's/(?<=email = ).+@.+/nancy_phams_email\@yahoo.com/g' ~/.gitconfig
+    echo "using git as Nancy"
+  else
+    perl -pi -e 's/Nancy Pham/Matthew Wolff/g' ~/.gitconfig
+    perl -pi -e 's/(?<=email = ).+@.+/mm.wolff\@chi-squared.org/g' ~/.gitconfig
+    echo "using git as Matthew"
+  fi
+}
+
 ##################################################################################################
 ## VARIABLES
 theme=$RANDOM_THEME # only valid if using random theme
@@ -132,12 +151,12 @@ alias grep='grep --color=auto'
 alias src='source ~/.zshrc'
 alias root='su -'
 alias shrink="export PS1=\"$USER > \"" # shrinks the prompt so that it doesnt show the working directory
-alias search='grep -rwn * -e '
+alias search='grep -rn * -e '
 alias rc='vim ~/.zshrc'
 alias msg='message'
 alias me='message me'
 alias g='Rscript /Users/matthew/Desktop/grad_school/applications/grad_school.r' # display grad summary
-alias find_large='du -sh * 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
+alias find_large='du -sh * .* 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
 alias jn='jupyter notebook'
 alias sublime=subl
 
@@ -148,6 +167,7 @@ alias pull='git pull origin $(git_current_branch)'
 alias force='git push -uf origin $(git_current_branch)'
 alias 'oops!'='gaa && gcn! && force'  # correct a fuck up w/o new commit
 alias gits='git status'
+alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
 
 # SPOTIFY
 alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
@@ -201,6 +221,7 @@ alias dsa='cd ~/Desktop/College/4Senior/spring/DataScience/assignments'
 alias github='cd ~/github'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
+alias nancy='cd ~/Dev/CLionProjects/autopilot'
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'

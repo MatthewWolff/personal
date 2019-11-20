@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e -x
+set -e
 
 PDF=MatthewWolffResume.pdf
 CODE=MatthewWolffResume.zip
@@ -25,21 +25,3 @@ cd gitresume
 git add --all
 git commit -m "version $VERSION"
 git push -u origin master
-
-# for f in `ls -1 *latex.zip`; do 
-# 	file_num="0$((10#${f:0:2}-5))"
-# 	file_pdf=${f:0:2}.pdf
-# 	new_pdf=gitresume/pdf/$file_num.pdf
-
-# 	rm -r gitresume/LaTeX/* &>/dev/null || true
-# 	rm -r gitresume/LaTeX/.[a-zA-Z0-9]* &>/dev/null || true
-# 	unzip $f -d gitresume/LaTeX/
-# 	cp $file_pdf $new_pdf
-# 	rm $f
-# 	cd gitresume
-# 	git add .
-# 	git commit -m "version $file_num" 
-# 	cd ..
-# done
-# cd gitresume && git push -u origin master
-# exit 0
