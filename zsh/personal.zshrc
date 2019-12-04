@@ -28,6 +28,7 @@ export SAVEHIST=1000000
 export PATH=/usr/local/anaconda3/bin:$PATH
 export PATH=$HOME/.scripts:$PATH
 export PATH=$HOME/GitHub/twitter:$PATH
+export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
 
 # .VIMRC
 if ! grep -q wolffy ~/.vimrc; then
@@ -91,6 +92,7 @@ set_git_time() {
       git push -f origin master
     fi
 }
+
 color() {
   cat <<"END"
 _RED = \033[31m
@@ -102,10 +104,12 @@ _PURPLE = \033[35m
 _CLEAR = \033[2J  # clears the terminal screen
 END
 }
+
 memory() {
 	free=$(df -h | grep "/dev/disk1" | grep -oEe "[1-9]{1,2}\.[0-9]Gi|[^0-9][0-9]{2}Gi" | tr "Gi" " " | head -n1)
 	echo "$(printf "%.3g" $(($free + 0.7))) GB"
 }
+
 mem() {
 	TMP=$(memory)
 	setopt +o nomatch
@@ -119,7 +123,7 @@ mem() {
 swap() {
 	mv "$1" "$1.swp"
 	mv "$2" "$1"
-	mv "$1.swp" "$2" 
+	mv "$1.swp" "$2"
 	echo "swapped $1 and $2"
 }
 
@@ -150,7 +154,7 @@ alias l='ls -lAh'
 alias grep='grep --color=auto'
 alias src='source ~/.zshrc'
 alias root='su -'
-alias shrink="export PS1=\"$USER > \"" # shrinks the prompt so that it doesnt show the working directory
+alias shrink="export RPROMPT=; export PS1=\"$USER > \"" # shrinks the prompt so that it doesnt show the working directory
 alias search='grep -rn * -e '
 alias rc='vim ~/.zshrc'
 alias msg='message'
@@ -184,7 +188,7 @@ alias disc='spotify play uri spotify:playlist:37i9dQZEVXcHX1sGVICYXF >/dev/null 
 alias werk='spotify play uri spotify:playlist:0c4qVPXwIarAIOIPsgI0Gp >/dev/null && echo playing werk playlist...'
 alias interstellar='spotify play uri spotify:album:3N8fGhRcHWqyy0SfWa92H0 >/dev/null && echo playing interstellar soundtrack...'
 alias moderat='spotify play uri spotify:artist:2exkZbmNqMKnT8LRWuxWgy >/dev/null && echo playing moderat...'
-alias shiloh='spotify play uri spotify:artist:1wxPItEzr7U7rGSMPqZ25r >/dev/null && echo playing shiloh dynasty...'
+alias shiloh='spotify play uri spotify:playlist:7qd17uUKPGKXXDzSLMu9dJ >/dev/null && echo playing shiloh dynasty...'
 alias eden='spotify play uri spotify:artist:1t20wYnTiAT0Bs7H1hv9Wt >/dev/null && echo playing eden...'
 alias xxx='spotify play uri spotify:artist:15UsOTVnJzReFVN1VCnxy4 >/dev/null && echo playing xxxTentacion...'
 alias i=interstellar
@@ -222,6 +226,7 @@ alias github='cd ~/github'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
 alias nancy='cd ~/Dev/CLionProjects/autopilot'
+alias research='cd /Users/matthew/github/tusv'
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
