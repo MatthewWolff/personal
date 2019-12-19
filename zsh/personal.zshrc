@@ -92,6 +92,29 @@ set_git_time() {
       git push -f origin master
     fi
 }
+git_rewrite() {
+  if [[ -z $1 ]]; then
+    echo "please supply the email to replace as an argument"
+  else
+    git filter-branch --env-filter '
+		WRONG_EMAIL='"$1"'
+		NEW_NAME="Matthew Wolff"
+		NEW_EMAIL="mm.wolff@chi-squared.org"
+
+		if [ "$GIT_COMMITTER_EMAIL" = "$WRONG_EMAIL" ]
+		then
+		    export GIT_COMMITTER_NAME="$NEW_NAME"
+		    export GIT_COMMITTER_EMAIL="$NEW_EMAIL"
+		fi
+		if [ "$GIT_AUTHOR_EMAIL" = "$WRONG_EMAIL" ]
+		then
+		    export GIT_AUTHOR_NAME="$NEW_NAME"
+		    export GIT_AUTHOR_EMAIL="$NEW_EMAIL"
+		fi
+		' --tag-name-filter cat -- --branches --tags
+	echo "now push!"
+  fi
+}
 
 color() {
   cat <<"END"
