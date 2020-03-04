@@ -61,6 +61,7 @@ fi
 ## FUNCTIONS
 trash() { mv $* ~/.Trash;}
 cd() { builtin cd $@ && ls; }
+src() { source ~/.zshrc; }
 rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.zshrc; }
 addalias()
 {
@@ -162,6 +163,13 @@ nancygit() {
   fi
 }
 
+search_messages() {
+  query="$@"
+  sqlite3 ~/library/messages/chat.db \
+  	-cmd ".load /usr/lib/sqlite3/pcre.so" \
+	"SELECT text FROM message WHERE text REGEXP '$query'"
+}
+
 ##################################################################################################
 ## VARIABLES
 theme=$RANDOM_THEME # only valid if using random theme
@@ -175,7 +183,6 @@ alias please='sudo'
 alias ls='ls -G '
 alias l='ls -lAh'
 alias grep='grep --color=auto'
-alias src='source ~/.zshrc'
 alias root='su -'
 alias shrink="export RPROMPT=; export PS1=\"$USER > \"" # shrinks the prompt so that it doesnt show the working directory
 alias search='grep -rn * -e '
@@ -186,6 +193,7 @@ alias g='Rscript /Users/matthew/Desktop/grad_school/applications/grad_school.r' 
 alias find_large='du -sh * .* 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
 alias jn='jupyter notebook'
 alias sublime=subl
+alias matlab='/Applications/MATLAB.app/bin/matlab'
 
 # GIT
 alias glist='git diff --cached'
@@ -202,7 +210,7 @@ alias song='spotify status'
 alias play='spotify play'
 alias shuf='spotify toggle shuffle'
 alias next='spotify next'
-alias prev='spotift prev'
+alias prev='spotify prev'
 alias skip=next
 alias n=next
 alias p=prev
@@ -219,8 +227,8 @@ alias m=moderat
 alias s=shiloh
 alias e=eden
 alias x=xxx  # xxxTentacion
-alias vu='spotify vol up'
-alias vd='spotify vol down'
+alias vu='spotify vol $(( $(spotify vol | perl -nle "print $& if m{[0-9]{1,2}(?=\.)}") + 11 ))'
+alias vd='spotify vol $(( $(spotify vol | perl -nle "print $& if m{[0-9]{1,2}(?=\.)}") - 9 ))'
 
 # SSH
 alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t zsh"
@@ -239,23 +247,20 @@ alias ds='docker run -i -t mwolff3/cs639'
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
-alias 301='cd ~/Desktop/College/4Senior/Spring/cs301/'
-alias mc='cd ~/desktop/college/research/mcmahon/'
-alias research='res'
-alias grad='cd ~/Desktop/grad_school/first_year'
+alias grad='cd ~/Desktop/grad_school/first_year/Spring'
 alias college='cd ~/Desktop/College/4Senior/spring'
-alias dsa='cd ~/Desktop/College/4Senior/spring/DataScience/assignments'
 alias github='cd ~/github'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
-alias nancy='cd ~/Dev/CLionProjects/autopilot'
-alias research='cd /Users/matthew/github/tusv'
+alias res='cd /Users/matthew/Desktop/grad_school/first_year/schwartz/TreeDeconvolution'
+alias research='res'
+alias ml='cd /Users/matthew/Desktop/grad_school/first_year/Spring/ml'
+alias docs='cd /Users/matthew/Documents'
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
-alias calc='~/.calc/./prog'
+alias calc='~/.calc/prog'
 alias trans="Rscript -e 'suppressMessages(library(tidyverse)); read_csv(\"~/.scripts/sex.csv\", col_types=cols())'"
 alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
-alias search_messages='sqlite3 ~/library/messages/chat.db <<< '
