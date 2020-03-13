@@ -164,10 +164,19 @@ nancygit() {
 }
 
 search_messages() {
-  query="$@"
-  sqlite3 ~/library/messages/chat.db \
-  	-cmd ".load /usr/lib/sqlite3/pcre.so" \
-	"SELECT text FROM message WHERE text REGEXP '$query'"
+  regex="$@"
+  database="$HOME/library/messages/chat.db"
+  use_extension=".load /usr/lib/sqlite3/pcre.so"
+  query="SELECT text FROM message WHERE text REGEXP '$regex'"
+  sqlite3 "$database" -cmd "$use_extension" "$query"
+}
+notes() {
+  document=/Users/matthew/Desktop/grad_school/first_year/schwartz/notes.md
+  if [[ -z $1 ]]; then
+    cat $document
+  else
+    echo "* $* || $(date)" >> $document
+  fi
 }
 
 ##################################################################################################
