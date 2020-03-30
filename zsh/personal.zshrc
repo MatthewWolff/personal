@@ -57,6 +57,10 @@ endfunction
 EOF
 fi
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
 ##################################################################################################
 ## FUNCTIONS
 trash() { mv $* ~/.Trash;}
@@ -150,19 +154,6 @@ swap() {
 	mv "$1.swp" "$2"
 	echo "swapped $1 and $2"
 }
-
-nancygit() {
-  if grep -q Matthew ~/.gitconfig; then
-    perl -pi -e 's/Matthew Wolff/Nancy Pham/g' ~/.gitconfig
-    perl -pi -e 's/(?<=email = ).+@.+/nancy_phams_email\@yahoo.com/g' ~/.gitconfig
-    echo "using git as Nancy"
-  else
-    perl -pi -e 's/Nancy Pham/Matthew Wolff/g' ~/.gitconfig
-    perl -pi -e 's/(?<=email = ).+@.+/mm.wolff\@chi-squared.org/g' ~/.gitconfig
-    echo "using git as Matthew"
-  fi
-}
-
 search_messages() {
   regex="$@"
   database="$HOME/library/messages/chat.db"
@@ -273,3 +264,4 @@ alias trans="Rscript -e 'suppressMessages(library(tidyverse)); read_csv(\"~/.scr
 alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
+alias gen='cd /Users/matthew/Desktop/grad_school/first_year/Spring/quantgen'
