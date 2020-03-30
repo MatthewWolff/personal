@@ -1,20 +1,27 @@
 #!/usr/bin/env bash
-
 set -o errexit
 set -o nounset
-builtin cd ~/Library/Application\ Support/minecraft/WolffDen_server
+
+files="$(mktemp)"
+world=Amonkhet
+ip=149.56.241.69
+target_dir=~/Library/ApplicationSupport/minecraft/WolffDen_server
+
+# remove temporary files on exit
+clean_up() { rm -f "$files" "${world}.zip"; }
+trap clean_up EXIT
 
 # download all schematics
-files=$(mktemp)
-ftp 149.56.241.69 <<< 'ls plugins/WorldEdit/schematics' | grep -oE '[a-zA-Z]+.schem' > $files
-for file in $(cat $files); do
-  ftp 149.56.241.69 <<< $'cd plugins/WorldEdit/schematics\nget '$file
+builtin cd "${target_dir}"
+ftp ${ip} <<< 'ls plugins/WorldEdit/schematics' | grep -oE '[a-zA-Z]+.schem' > "${files}"
+for file in $(cat "${files}"); do
+  ftp ${ip} <<< $'cd plugins/WorldEdit/schematics\nget '"${file}"
 done
-rm $files
 echo 'downloaded all schematics!'
 
 # download map itself
 echo "downloading map..."
-ftp 149.56.241.69 <<< 'get Amonkhet.zip'
+ftp ${ip} <<< "get $world.zip"
+mv "${world}.zip" "${world}_$(date '+%Y-%m-%d').zip"
 
 echo 'backup complete!'
