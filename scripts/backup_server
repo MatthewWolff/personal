@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+builtin cd ~/Library/Application\ Support/minecraft/WolffDen_server
+
+# download all schematics
+files=$(mktemp)
+ftp 149.56.241.69 <<< 'ls plugins/WorldEdit/schematics' | grep -oE '[a-zA-Z]+.schem' > $files
+for file in $(cat $files); do
+  ftp 149.56.241.69 <<< $'cd plugins/WorldEdit/schematics\nget '$file
+done
+rm $files
+echo 'downloaded all schematics!'
+
+# download map itself
+echo "downloading map..."
+ftp 149.56.241.69 <<< 'get Amonkhet.zip'
+
+echo 'backup complete!'
