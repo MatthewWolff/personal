@@ -28,6 +28,7 @@ export SAVEHIST=1000000
 export PATH=/usr/local/anaconda3/bin:$PATH
 export PATH=$HOME/.scripts:$PATH
 export PATH=$HOME/GitHub/twitter:$PATH
+export PATH=/Users/matthew/.nimble/bin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
 
 # .VIMRC
@@ -256,6 +257,11 @@ alias res='cd /Users/matthew/Desktop/grad_school/first_year/schwartz/TreeDeconvo
 alias research='res'
 alias ml='cd /Users/matthew/Desktop/grad_school/first_year/Spring/ml'
 alias docs='cd /Users/matthew/Documents'
+alias gen='cd /Users/matthew/Desktop/grad_school/first_year/Spring/quantgen'
+
+# MINECRAFT
+alias minecraft='ftp 149.56.241.69'
+alias amidst='java -jar /Users/matthew/Library/ApplicationSupport/minecraft/WolffDen_server/amidst-v4-4.jar'
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
@@ -264,5 +270,3 @@ alias trans="Rscript -e 'suppressMessages(library(tidyverse)); read_csv(\"~/.scr
 alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
-alias gen='cd /Users/matthew/Desktop/grad_school/first_year/Spring/quantgen'
-alias minecraft='ftp 149.56.241.69'

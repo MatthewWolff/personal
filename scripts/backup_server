@@ -13,9 +13,9 @@ trap clean_up EXIT
 
 # download all schematics
 builtin cd "${target_dir}"
-ftp ${ip} <<< 'ls plugins/WorldEdit/schematics' | grep -oE '[a-zA-Z]+.schem' > "${files}"
+ftp ${ip} <<< 'ls plugins/WorldEdit/schematics' | grep -oE '[a-zA-Z_]+.schem' > "${files}"
 for file in $(cat "${files}"); do
-  ftp ${ip} <<< $'cd plugins/WorldEdit/schematics\nget '"${file}"
+  ftp -v ${ip} <<< $'cd plugins/WorldEdit/schematics\nget '"${file}"
 done
 echo 'downloaded all schematics!'
 
