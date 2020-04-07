@@ -15,13 +15,14 @@ trap clean_up EXIT
 builtin cd "${target_dir}"
 ftp ${ip} <<< 'ls plugins/WorldEdit/schematics' | grep -oE '[a-zA-Z_]+.schem' > "${files}"
 for file in $(cat "${files}"); do
-  ftp -v ${ip} <<< $'cd plugins/WorldEdit/schematics\nget '"${file}"
+  ftp ${ip} <<< $'cd plugins/WorldEdit/schematics\nget '"${file}"
+  echo ">downloaded $file"
 done
-echo 'downloaded all schematics!'
+echo $'...\ndownloaded all schematics!\n'
 
 # download map itself
 echo "downloading map..."
-ftp ${ip} <<< "get $world.zip"
+ftp ${ip} <<< "get ${world}.zip"
 mv "${world}.zip" "${world}_$(date '+%Y-%m-%d').zip"
 
 echo 'backup complete!'
