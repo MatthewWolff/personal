@@ -2,27 +2,44 @@
 set -o errexit
 set -o nounset
 
-files="$(mktemp)"
-world=Amonkhet
 ip=149.56.241.69
 target_dir=~/Library/ApplicationSupport/minecraft/WolffDen_server
 
 # remove temporary files on exit
-clean_up() { rm -f "$files" "${world}.zip"; }
+clean_up() { builtin cd "${target_dir}"; rm -f "$files" "${world}.zip" server.properties; }
 trap clean_up EXIT
 
-# download all schematics
+# set up
+files="$(mktemp)"
 builtin cd "${target_dir}"
+
+# get world
+ftp ${ip} <<< 'get server.properties'
+world=$(grep "level-name" server.properties | sed "s/level-name=//")
+
+# download all schematics
+mkdir -p "schematics" && builtin cd $_
 ftp ${ip} <<< 'ls plugins/WorldEdit/schematics' | grep -oE '[a-zA-Z_]+.schem' > "${files}"
 for file in $(cat "${files}"); do
   ftp ${ip} <<< $'cd plugins/WorldEdit/schematics\nget '"${file}"
   echo ">downloaded $file"
 done
+builtin cd ..
 echo $'...\ndownloaded all schematics!\n'
 
-# download map itself
-echo "downloading map..."
-ftp ${ip} <<< "get ${world}.zip"
-mv "${world}.zip" "${world}_$(date '+%Y-%m-%d').zip"
+# download all warps
+mkdir -p "warps_${world}" && builtin cd $_
+ftp ${ip} <<< 'ls plugins/Essentials/warps' | grep -oE '[a-zA-Z_]+.yml' > "${files}"
+for file in $(cat "${files}"); do
+  ftp ${ip} <<< $'cd plugins/Essentials/warps\nget '"${file}"
+  echo ">downloaded $file"
+done
+builtin cd ..
+echo $'...\ndownloaded all warps!\n'
+
+## download map itself - doesn't work! loses packets!! need to use FileZilla?
+# echo "downloading map..."
+# ftp ${ip} <<< "get ${world}.zip"
+# mv "${world}.zip" "${world}_$(date '+%Y-%m-%d').zip"
 
 echo 'backup complete!'
