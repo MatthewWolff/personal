@@ -10,9 +10,9 @@ brew update
 brew tap caskroom/cask # add another formula repository
 brew install --with-x11 homebrew/science/r # install R from an additional tap
 brew cask install anaconda java iterm2 visual-studio-code gimp rstudio pycharm \
-     spectacle google-chrome spotify sublime-text # first line: dev tools \\ second line: utility
+  spectacle google-chrome spotify sublime-text # first line: dev tools \\ second line: utility
 brew install hub wget zsh bash scala apach-spark hadoop bfg node \
-			 http-server sshpass shellcheck shpotify gdrive lolcat
+  http-server sshpass shellcheck shpotify gdrive lolcat
 brew cleanup
 
 # r packages
@@ -20,9 +20,9 @@ Rscript -e 'install.packages("tidyverse")' &
 
 # chrome extensions
 open https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh \
-     https://chrome.google.com/webstore/detail/adblock/gighmmpiobklfepjocnamgkkbiglidom \
-     https://chrome.google.com/webstore/detail/backspace-to-go-back/nlffgllnjjkheddehpolbanogdeaogbc \
-     -a "/Applications/Google Chrome.app/"
+  https://chrome.google.com/webstore/detail/adblock/gighmmpiobklfepjocnamgkkbiglidom \
+  https://chrome.google.com/webstore/detail/backspace-to-go-back/nlffgllnjjkheddehpolbanogdeaogbc \
+  -a "/Applications/Google Chrome.app/"
 
 # customization + personal credentials
 mkdir $HOME/scripts $HOME/development
@@ -34,4 +34,4 @@ bash private/.installer && rm -rf private/
 # shell setup
 bash <(curl -fsSL zsh.wolff.sh)
 bash <(curl -fsSL bash.wolff.sh)
-touch ~/.hushlogin
+touch $HOME/.hushlogin

@@ -1,28 +1,34 @@
 #!/bin/bash
-command -v atom >/dev/null || brew install atom
+set -e
 
 packages=(
   atom-beautify
-  atom-notes
   autoclose-html
   busy-signal
-  intentions
-  linter
-  linter-csslint
-  linter-htmlhint
-  linter-jsonlint
-  linter-markdown
-  linter-shellcheck
-  linter-ui-default
   markdown-preview-plus
   open-recent
-  pigments
-  sublime-block-comment
-  tablr
+  # pigments
+  Sublime-Style-Column-Selection
   teletype
 )
 
-for package in "${packages[@]}"; do
-  apm install $package &
-  # open https://atom.io/packages/$package
-done && wait
+install() {
+  package=$1
+  if apm install $package &> /dev/null; then
+    echo "installed $package"
+  else
+    echo "failed to install $package"
+  fi
+}
+
+main() {
+  # check if atom is even installed
+  command -v atom >/dev/null || brew cask install atom
+
+  # install a few packages
+  for package in "${packages[@]}"; do
+    install $package &
+  done && wait
+}
+
+main
