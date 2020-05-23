@@ -260,14 +260,9 @@ alias ml='cd /Users/matthew/Desktop/grad_school/first_year/Spring/ml'
 alias docs='cd /Users/matthew/Documents'
 alias gen='cd /Users/matthew/Desktop/grad_school/first_year/Spring/quantgen'
 
-# MINECRAFT
-alias minecraft='ftp 149.56.241.69'
-alias amidst='java -jar /Users/matthew/Library/ApplicationSupport/minecraft/WolffDen_server/amidst-v4-4.jar'
-
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
 alias calc='~/.calc/prog'
-alias trans="Rscript -e 'suppressMessages(library(tidyverse)); read_csv(\"~/.scripts/sex.csv\", col_types=cols())'"
 alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
