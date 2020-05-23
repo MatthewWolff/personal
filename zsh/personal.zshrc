@@ -28,7 +28,8 @@ export SAVEHIST=1000000
 export PATH=/usr/local/anaconda3/bin:$PATH
 export PATH=$HOME/.scripts:$PATH
 export PATH=$HOME/GitHub/twitter:$PATH
-export PATH=/Users/matthew/.nimble/bin:$PATH
+export PATH=$HOME/.nimble/bin:$PATH
+export PATH=$HOME/.cargo/bin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
 
 # .VIMRC
