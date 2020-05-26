@@ -8,7 +8,7 @@ xcode-select --install
 # brew installs
 brew update
 brew tap caskroom/cask # add another formula repository
-brew install --with-x11 homebrew/science/r # install R from an additional tap
+brew install r # install R before Rstudio
 brew cask install anaconda java iterm2 visual-studio-code gimp rstudio pycharm \
   spectacle google-chrome spotify sublime-text # first line: dev tools \\ second line: utility
 brew install hub wget zsh bash scala apach-spark hadoop bfg node \
@@ -32,6 +32,6 @@ echo "finished cloning. re-enabling verbosity"
 bash private/.installer && rm -rf private/
 
 # shell setup
-bash <(curl -fsSL zsh.wolff.sh)
-bash <(curl -fsSL bash.wolff.sh)
+curl -fsSL zsh.wolff.sh | bash 
+curl -fsSL bash.wolff.sh | bash 
 touch $HOME/.hushlogin
