@@ -72,7 +72,7 @@ hfs(){ hadoop fs -$*; }
 alias daddy='sudo'
 alias grep='grep --color=auto' 
 alias rand='[[ $ZSH_THEME = random ]] || settheme random; source ~/.zshrc'
-alias shrink='export PS1="\u > "' # shrinks the prompt so that it doesn't show the working directory
+alias shrink="export RPROMPT=; export PS1=\"$USER > \"" # shrinks the prompt so that it doesnt show the working directory
 alias search='grep -rwn * -e '
 alias ls='ls -G'  # ls -G on mac, ls --color on linux
 alias l='ls -lAh'
