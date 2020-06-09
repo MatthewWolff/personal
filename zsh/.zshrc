@@ -73,7 +73,7 @@ alias daddy='sudo'
 alias grep='grep --color=auto' 
 alias rand='[[ $ZSH_THEME = random ]] || settheme random; source ~/.zshrc'
 alias shrink="export RPROMPT=; export PS1=\"$USER > \"" # shrinks the prompt so that it doesnt show the working directory
-alias search='grep -rwn * -e '
+alias search='grep -rn * -e '
 alias ls='ls -G'  # ls -G on mac, ls --color on linux
 alias l='ls -lAh'
 alias root='su -'
