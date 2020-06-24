@@ -82,13 +82,14 @@ alias rc='vim ~/.zshrc'
 alias src='source ~/.zshrc'
 
 # GIT
-alias push='git push -u origin master'
+alias push='git push -u origin $(git_current_branch)'
 alias pull='git pull'
 alias gaa='git add --all'
 alias 'gcn!'='git commit -v --no-edit --amend'  # retroactively commit files to last commit
-alias force='git push -u -f origin master'
+alias force='git push -u -f origin $(git_current_branch)'
 alias 'oops!'='gaa && gcn! && force'
 alias gits='git status'
+alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
 
 # SPOTIFY
 alias spotify='if ! pgrep -x "Spotify" > /dev/null; then
