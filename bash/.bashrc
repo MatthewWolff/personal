@@ -131,7 +131,7 @@ alias grep='grep --color=auto'
 alias src='source ~/.bashrc'
 alias root='su -'
 alias shrink="export PS1=\"$USER > \"" # shrinks the prompt so that it doesn't show the working directory
-alias search='grep -rwn * -e '
+alias search='grep -rn * -e '
 alias rc='vim ~/.bashrc'
 alias find_large='du -sh * 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
 alias jn='jupyter notebook'
