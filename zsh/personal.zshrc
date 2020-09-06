@@ -31,6 +31,13 @@ export PATH=$HOME/GitHub/twitter:$PATH
 export PATH=$HOME/.nimble/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/matthew/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/matthew/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
 # .VIMRC
 if ! grep -q wolffy ~/.vimrc; then
@@ -164,12 +171,24 @@ search_messages() {
   sqlite3 "$database" -cmd "$use_extension" "$query"
 }
 notes() {
-  document=/Users/matthew/Desktop/grad_school/first_year/schwartz/notes.md
+  document=/Users/matthew/Desktop/grad_school/ms/first_year/schwartz/notes.md
   if [[ -z $1 ]]; then
     cat $document
   else
     echo "* $* || $(date)" >> $document
   fi
+}
+use_credentials() {
+  [[ -z $1 ]] && echo 'usage: use_credentials [credential file.csv]' && return 1
+  [[ ! -f $1 ]] && echo 'invalid file provided' && return 1 
+  file=$1
+  data=$(cat $file | tail -n1 | sed -E $'s/,/\t/g')
+  export AWS_ACCESS_KEY_ID=$(awk '{ print $2 }' <<< $data)
+  export AWS_SECRET_KEY=$(awk '{ print $3}' <<< $data)
+}
+connect() {
+  [[ -z $1 ]] && echo 'usage: connect [ip]' && return 1 
+  ssh -i ~/.ssh/cloud_compute_aws.pem ubuntu@$1 || ssh -i ~/.ssh/cloud_compute_aws.pem ec2-user@$1
 }
 
 ##################################################################################################
@@ -191,7 +210,7 @@ alias search='grep -rn * -e '
 alias rc='vim ~/.zshrc'
 alias msg='message'
 alias me='message me'
-alias g='Rscript /Users/matthew/Desktop/grad_school/applications/grad_school.r' # display grad summary
+alias g='Rscript /Users/matthew/Desktop/grad_school/initial_apps/grad_school.r' # display grad summary
 alias find_large='du -sh * .* 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
 alias jn='jupyter notebook'
 alias sublime=subl
@@ -245,20 +264,20 @@ alias docker_stop='docker rm $(docker ps -a -q)'
 alias dls='docker images'
 alias drun='docker run -i -t'
 alias drm='docker rmi'
-alias ds='docker run -i -t mwolff3/cs639'
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
-alias grad='cd ~/Desktop/grad_school/first_year/Spring'
-alias college='cd ~/Desktop/College/4Senior/spring'
+alias grad='cd ~/Desktop/grad_school/ms/second_year/fall'
+alias college='cd ~/Desktop/College/'
 alias github='cd ~/github'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
-alias cmu='cd /Users/matthew/Desktop/grad_school/cmu'
-alias res='cd /Users/matthew/Desktop/grad_school/first_year/schwartz/TreeDeconvolution'
+alias cmu='cd /Users/matthew/Desktop/grad_school/ms/cmu'
+alias res='cd /Users/matthew/Desktop/grad_school/ms/first_year/schwartz/TreeDeconvolution'
 alias research='res'
-alias ml='cd /Users/matthew/Desktop/grad_school/first_year/Spring/ml'
+alias ml='cd /Users/matthew/Desktop/grad_school/ms/first_year/Spring/ml'
 alias docs='cd /Users/matthew/Documents'
-alias gen='cd /Users/matthew/Desktop/grad_school/first_year/Spring/quantgen'
+alias gen='cd /Users/matthew/Desktop/grad_school/ms/first_year/Spring/quantgen'
+alias ds='cd /Users/matthew/Desktop/grad_school/ms/second_year/fall/foundations_of_comp_data_sci'
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
@@ -266,3 +285,6 @@ alias calc='~/.calc/prog'
 alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
+alias cs301='cd /Users/matthew/Desktop/College/4Senior/Fall/cs301'
+use_credentials ~/Downloads/CloudComputingCredentials.csv
+alias az='az account show | grep -oE "mwolff.+com"; az'

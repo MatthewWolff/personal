@@ -11,6 +11,7 @@ email= # TODO: your imessage email
 	name)	recipient="+123456789"
 	name)	recipient="+123456789"
 	name)	recipient="+123456789"
+	name)	recipient="+123456789"
 esac
 
 /usr/bin/osascript -e 'tell application "Messages"
