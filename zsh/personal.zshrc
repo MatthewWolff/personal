@@ -32,6 +32,8 @@ export PATH=$HOME/.nimble/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
+export TPZ_USERNAME=mwolff@andrew.cmu.edu
+export TPZ_PASSWORD=J33Xxqst8jlyo0D52zLV3o
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc'; fi
@@ -90,7 +92,6 @@ addalias()
     source ~/.zshrc
   fi
 }
-pycharm() {  open $@ -a "/Applications/PyCharm.app"; }
 chrome()  {  open $@ -a "/Applications/Google Chrome.app"; }
 clion()   {  open $@ -a "/Applications/Clion.app"; }
 gimp()    {  open $@ -a "/Applications/GIMP-2.10.app"; }
@@ -184,12 +185,40 @@ use_credentials() {
   file=$1
   data=$(cat $file | tail -n1 | sed -E $'s/,/\t/g')
   export AWS_ACCESS_KEY_ID=$(awk '{ print $2 }' <<< $data)
-  export AWS_SECRET_KEY=$(awk '{ print $3}' <<< $data)
+  export AWS_SECRET_ACCESS_KEY=$(awk '{ print $3}' <<< $data)
 }
+use_credentials ~/Downloads/CloudComputingCredentials.csv
 connect() {
   [[ -z $1 ]] && echo 'usage: connect [ip]' && return 1 
-  ssh -i ~/.ssh/cloud_compute_aws.pem ubuntu@$1 || ssh -i ~/.ssh/cloud_compute_aws.pem ec2-user@$1
+  ssh -i ~/.ssh/cloud_compute_aws.pem clouduser@$1
 }
+connect_jupyter() {
+  [[ -z $1 ]] && echo 'usage: connect [ip] [port=8888]' && return 1
+  [[ -z $2 ]] && PORT=8888 || PORT=$2
+  ssh -i ~/.ssh/cloud_compute_aws.pem -L ${PORT}:localhost:${PORT} clouduser@$1
+}
+grab() {
+  [[ ! $# = 2 ]] && echo 'usage: grab [ec2 ip address] [project number]' && return 1
+  ip=$1; project_num=$2
+  mkdir -p /cloud_computing/p${project_num}/remote
+  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" clouduser@${ip}:Project${project_num}/ /cloud_computing/p${project_num}/remote/
+}
+upcloud() {
+  [[ ! $# = 2 ]] && echo 'usage: upcloud [ec2 ip address] [project number]' && return 1
+  ip=$1; project_num=$2
+  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:Project${project_num}/
+}
+use_venv() {
+  if [[ -n $1 ]]; then  # assume we're not already in the venv
+    venv_path=$1    
+    [[ ! -f $venv_path/bin/activate ]] && echo "venv $venv_path does not exist" >&2 && return 1
+    source $venv_path/bin/activate
+  fi
+  venv_name=$(perl -nle 'print $& if m{^\(.*?\)}' <<< "$PROMPT")
+  raw_prompt=$(perl -p -e 's/^\(.*?\) //' <<< "$PROMPT")
+  PROMPT=$(perl -p -e "s/ > / ${fg_bold[white]}${venv_name}${reset_color}$&/" <<< "$raw_prompt")
+}
+
 
 ##################################################################################################
 ## VARIABLES
@@ -215,6 +244,10 @@ alias find_large='du -sh * .* 2>/dev/null | grep -E "[0-9]+(\.[0-9])?G.*"'
 alias jn='jupyter notebook'
 alias sublime=subl
 alias matlab='/Applications/MATLAB.app/bin/matlab'
+alias checkstyle='java -jar /cloud_computing/checkstyle.jar -c /cloudcomputing_course_checkstyle.xml .'
+alias az='az account show | grep -oE "mwolff.+com"; az'
+alias apps='/Users/matthew/Desktop/grad_school/phd_apps/apps.r'
+alias tf='terraform'
 
 # GIT
 alias glist='git diff --cached'
@@ -278,6 +311,9 @@ alias ml='cd /Users/matthew/Desktop/grad_school/ms/first_year/Spring/ml'
 alias docs='cd /Users/matthew/Documents'
 alias gen='cd /Users/matthew/Desktop/grad_school/ms/first_year/Spring/quantgen'
 alias ds='cd /Users/matthew/Desktop/grad_school/ms/second_year/fall/foundations_of_comp_data_sci'
+alias first='cd /Users/matthew/Desktop/grad_school/ms/first_year'
+alias cs301='cd /Users/matthew/Desktop/College/4Senior/Fall/cs301'
+alias cc='cd /cloud_computing'
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
@@ -285,6 +321,4 @@ alias calc='~/.calc/prog'
 alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
-alias cs301='cd /Users/matthew/Desktop/College/4Senior/Fall/cs301'
-use_credentials ~/Downloads/CloudComputingCredentials.csv
-alias az='az account show | grep -oE "mwolff.+com"; az'
+alias graphviz='open http://www.webgraphviz.com/'

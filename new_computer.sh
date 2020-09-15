@@ -12,7 +12,7 @@ brew install r # install R before Rstudio
 brew cask install anaconda java iterm2 visual-studio-code gimp rstudio pycharm \
   spectacle google-chrome spotify sublime-text # first line: dev tools \\ second line: utility
 brew install hub wget zsh bash scala apach-spark hadoop bfg node \
-  http-server sshpass shellcheck shpotify gdrive lolcat
+  http-server sshpass shellcheck shpotify gdrive lolcat tree
 brew cleanup
 
 # r packages
@@ -32,6 +32,6 @@ echo "finished cloning. re-enabling verbosity"
 bash private/.installer && rm -rf private/
 
 # shell setup
-curl -fsSL zsh.wolff.sh | bash 
-curl -fsSL bash.wolff.sh | bash 
+curl -fsSL zsh.wolff.sh | bash
+curl -fsSL bash.wolff.sh | bash
 touch $HOME/.hushlogin
