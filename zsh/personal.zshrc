@@ -24,16 +24,19 @@ plugins=(
 ## USER CONFIGURATION
 source $ZSH/oh-my-zsh.sh
 source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # valid command highlighter
-export SAVEHIST=1000000
+export SAVEHIST=999999999
+export HISTSIZE=$SAVEHIST
+export HISTFILE=~/.zsh_history
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
 export PATH=/usr/local/anaconda3/bin:$PATH
 export PATH=$HOME/.scripts:$PATH
 export PATH=$HOME/GitHub/twitter:$PATH
 export PATH=$HOME/.nimble/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
+export PATH=/usr/local/sbin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
-export TPZ_USERNAME=mwolff@andrew.cmu.edu
-export TPZ_PASSWORD=J33Xxqst8jlyo0D52zLV3o
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc'; fi
@@ -97,6 +100,7 @@ clion()   {  open $@ -a "/Applications/Clion.app"; }
 gimp()    {  open $@ -a "/Applications/GIMP-2.10.app"; }
 vscode()  {  open $@ -a "/Applications/Visual Studio Code.app"; }
 rstudio() {  open $@ -a "/Applications/Rstudio.app"; }
+pycharm() {  open $@ -a "/Applications/Pycharm.app"; }
 settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 set_git_time() {
     if [[ -z $1 ]]; then
@@ -200,13 +204,15 @@ connect_jupyter() {
 grab() {
   [[ ! $# = 2 ]] && echo 'usage: grab [ec2 ip address] [project number]' && return 1
   ip=$1; project_num=$2
+  cloud_proj=$(grep -oE -c1 '[0-9]' <<< $project_num )
   mkdir -p /cloud_computing/p${project_num}/remote
-  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" clouduser@${ip}:Project${project_num}/ /cloud_computing/p${project_num}/remote/
+  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" clouduser@${ip}:Project${cloud_proj}/ /cloud_computing/p${project_num}/remote/
 }
 upcloud() {
   [[ ! $# = 2 ]] && echo 'usage: upcloud [ec2 ip address] [project number]' && return 1
   ip=$1; project_num=$2
-  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:Project${project_num}/
+  cloud_proj=$(grep -oE -c1 '[0-9]' <<< $project_num )
+  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:Project${cloud_proj}/
 }
 use_venv() {
   if [[ -n $1 ]]; then  # assume we're not already in the venv
