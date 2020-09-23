@@ -46,5 +46,5 @@ stdout "Refreshed wolffy.zsh-theme"
 
 # change into zsh
 stdout 'zsh customization complete!\n'
-chsh -s $(command -v zsh)
+stdout 'run the command `zsh` in order to switch into the shell'
 exec zsh -l
