@@ -20,9 +20,13 @@ plugins=(
 )
 
 #### USER CONFIGURATION ####
-source $ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Valid command highlighter
 source $ZSH/oh-my-zsh.sh
-export SAVEHIST=1000000
+source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # valid command highlighter
+export SAVEHIST=999999999
+export HISTSIZE=$SAVEHIST
+export HISTFILE=~/.zsh_history
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
 
 # .VIMRC
 touch ~/.vimrc
@@ -66,6 +70,17 @@ clion()   {  open $@ -a "/Applications/Clion.app"; }
 settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 cd(){ builtin cd $@ && ls; }
 hfs(){ hadoop fs -$*; }
+use_venv() {
+  if [[ -n $1 ]]; then  # assume we're not already in the venv
+    venv_path=$1
+    [[ ! -f $venv_path/bin/activate ]] && echo "venv $venv_path does not exist" >&2 && return 1
+    source $venv_path/bin/activate
+  fi
+  venv_name=$(perl -nle 'print $& if m{^\(.*?\)}' <<< "$PROMPT")
+  raw_prompt=$(perl -p -e 's/^\(.*?\) //' <<< "$PROMPT")
+  PROMPT=$(perl -p -e "s/ > / ${fg_bold[white]}${venv_name}${reset_color}$&/" <<< "$raw_prompt")
+}
+
 
 #### ALIASES ####
 # UTILITY
@@ -107,10 +122,6 @@ alias moderat='play artist moderat'
 alias m='moderat'
 alias eden='play artist eden'
 alias e='eden'
-
-# HADOOP
-alias hstart='/usr/local/Cellar/hadoop/3.0.0/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/start-yarn.sh'
-alias hstop='/usr/local/Cellar/hadoop/3.0.0/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/3.0.0/sbin/stop-dfs.sh'
 
 # DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'

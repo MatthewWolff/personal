@@ -1,4 +1,4 @@
-# Created by Matthew Wolff (https://matthewwolff.github.io --- https://github.com/MatthewWolff/Scraps/blob/master/zsh/wolffy.zsh-theme)
+# Created by Matthew Wolff (https://matthewwolff.github.io --- https://github.com/MatthewWolff/Personal/blob/master/zsh/wolffy.zsh-theme)
 # Uses code from the battery plugin (https://github.com/MatthewWolff/oh-my-zsh/blob/master/plugins/battery/battery.plugin.zsh)
 
 function battery_pct_prompt () {
