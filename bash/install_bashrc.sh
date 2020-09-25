@@ -19,5 +19,11 @@ curl -so $rc https://raw.githubusercontent.com/MatthewWolff/Personal/master/bash
 curl -so $c  https://raw.githubusercontent.com/MatthewWolff/Personal/master/bash/.colors.sh
 [[ $(system) = Linux ]] && perl -pi -e 's/ls -G/ls --color/' $rc # proper ls command
 [[ $USER = root ]] && perl -pi -e 's/\$WHITE(?=\\u\$YELLOW@)/\$RED/' $rc # root coloring
+
+# Add shell-option to ~/.inputrc to enable case-insensitive tab completion
+if [ ! -a ~/.inputrc ]; then echo '$include /etc/inputrc' > ~/.inputrc; fi
+echo 'set completion-ignore-case On' >> ~/.inputrc
+
+# make sure .bashrc always runs
 echo "source ~/.bashrc" >> $HOME/.bash_profile
 . $rc
