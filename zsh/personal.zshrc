@@ -37,12 +37,8 @@ export PATH=$HOME/.cargo/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/matthew/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/matthew/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/matthew/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+export GOPATH=$HOME/dev/go
+export PATH=$PATH:$(go env GOPATH)/bin
 
 # .VIMRC
 if ! grep -q wolffy ~/.vimrc; then
@@ -202,17 +198,15 @@ connect_jupyter() {
   ssh -i ~/.ssh/cloud_compute_aws.pem -L ${PORT}:localhost:${PORT} clouduser@$1
 }
 grab() {
-  [[ ! $# = 2 ]] && echo 'usage: grab [ec2 ip address] [project number]' && return 1
-  ip=$1; project_num=$2
-  cloud_proj=$(grep -oE -c1 '[0-9]' <<< $project_num )
+  [[ ! $# = 3 ]] && echo 'usage: grab [ec2 ip address] [project number] [remote_folder]' && return 1
+  ip=$1; project_num=$2; remote_folder=$3
   mkdir -p /cloud_computing/p${project_num}/remote
-  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" clouduser@${ip}:Project${cloud_proj}/ /cloud_computing/p${project_num}/remote/
+  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" clouduser@${ip}:${remote_folder}/ /cloud_computing/p${project_num}/remote/
 }
 upcloud() {
-  [[ ! $# = 2 ]] && echo 'usage: upcloud [ec2 ip address] [project number]' && return 1
-  ip=$1; project_num=$2
-  cloud_proj=$(grep -oE -c1 '[0-9]' <<< $project_num )
-  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:Project${cloud_proj}/
+  [[ ! $# = 3 ]] && echo 'usage: upcloud [ec2 ip address] [project number] [remote_folder]' && return 1
+  ip=$1; project_num=$2; remote_folder=$3
+  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:${remote_folder}/
 }
 use_venv() {
   if [[ -n $1 ]]; then  # assume we're not already in the venv
@@ -301,8 +295,9 @@ alias matthew='ssh 192.168.0.186'
 # DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'
 alias dls='docker images'
-alias drun='docker run -i -t'
+alias drun='docker run -it --rm'
 alias drm='docker rmi'
+alias dps='docker ps'
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
@@ -328,3 +323,4 @@ alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
 alias graphviz='open http://www.webgraphviz.com/'
+alias dsjn='ds >/dev/null && docker run -it -p 8888:8888 --volume "`pwd`:/data" --hostname foundations datasci'
