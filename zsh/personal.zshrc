@@ -189,8 +189,14 @@ use_credentials() {
 }
 use_credentials ~/Downloads/CloudComputingCredentials.csv
 connect() {
-  [[ -z $1 ]] && echo 'usage: connect [ip]' && return 1 
-  ssh -i ~/.ssh/cloud_compute_aws.pem clouduser@$1
+  [[ ! $# = 2 ]] && echo 'usage: connect [platform] [ip address]' && return 1
+  platform=$1; ip=$2
+    case $platform in
+    aws)      key=~/.ssh/cloud_compute_aws.pem;;
+    gcloud)   key=~/.ssh/google_compute_engine;;
+    azure)    key=;;
+  esac
+  ssh -i $key clouduser@$ip
 }
 connect_jupyter() {
   [[ -z $1 ]] && echo 'usage: connect [ip] [port=8888]' && return 1
@@ -198,15 +204,25 @@ connect_jupyter() {
   ssh -i ~/.ssh/cloud_compute_aws.pem -L ${PORT}:localhost:${PORT} clouduser@$1
 }
 grab() {
-  [[ ! $# = 3 ]] && echo 'usage: grab [ec2 ip address] [project number] [remote_folder]' && return 1
-  ip=$1; project_num=$2; remote_folder=$3
+  [[ ! $# = 4 ]] && echo 'usage: grab [platform] [ec2 ip address] [project number] [remote_folder]' && return 1
+  platform=$1; ip=$2; project_num=$3; remote_folder=$4
+  case $platform in
+    aws)      key=~/.ssh/cloud_compute_aws.pem;;
+    gcloud)   key=~/.ssh/google_compute_engine;;
+    azure)    key=;;
+  esac
   mkdir -p /cloud_computing/p${project_num}/remote
-  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" clouduser@${ip}:${remote_folder}/ /cloud_computing/p${project_num}/remote/
+  rsync -Pav -e "ssh -i $key" clouduser@${ip}:${remote_folder}/ /cloud_computing/p${project_num}/remote/
 }
 upcloud() {
-  [[ ! $# = 3 ]] && echo 'usage: upcloud [ec2 ip address] [project number] [remote_folder]' && return 1
-  ip=$1; project_num=$2; remote_folder=$3
-  rsync -Pav -e "ssh -i ~/.ssh/cloud_compute_aws.pem" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:${remote_folder}/
+  [[ ! $# = 4 ]] && echo 'usage: upcloud [platform] [ec2 ip address] [project number] [remote_folder]' && return 1
+  platform=$1; ip=$2; project_num=$3; remote_folder=$4
+  case $platform in
+    aws)      key=~/.ssh/cloud_compute_aws.pem;;
+    gcloud)   key=~/.ssh/google_compute_engine;;
+    azure)    key=;;
+  esac
+  rsync -Pav -e "ssh -i $key" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:${remote_folder}/
 }
 use_venv() {
   if [[ -n $1 ]]; then  # assume we're not already in the venv
@@ -298,6 +314,7 @@ alias dls='docker images'
 alias drun='docker run -it --rm'
 alias drm='docker rmi'
 alias dps='docker ps'
+alias dsjn='ds >/dev/null && docker run -it -p 8888:8888 --volume "`pwd`:/data" --hostname foundations datasci'
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
@@ -323,4 +340,3 @@ alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
 alias graphviz='open http://www.webgraphviz.com/'
-alias dsjn='ds >/dev/null && docker run -it -p 8888:8888 --volume "`pwd`:/data" --hostname foundations datasci'
