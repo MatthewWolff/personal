@@ -63,6 +63,7 @@ function! Strip()               " strip whitespace from end of lines ( call Stri
   :%s/\s*$//g
   :'^
 endfunction
+colorscheme elflord
 """wolffy .vimrc end"""
 EOF
 fi
@@ -74,7 +75,7 @@ export NVM_DIR="$HOME/.nvm"
 ##################################################################################################
 ## FUNCTIONS
 trash() { mv $* ~/.Trash;}
-cd() { builtin cd $@ && ls; }
+cd() { builtin cd $@ && ls -G; }
 src() { source ~/.zshrc; }
 rmalias() {  perl -pi -e "s/^alias $@/# $&/" ~/.zshrc; }
 addalias()
@@ -97,6 +98,7 @@ gimp()    {  open $@ -a "/Applications/GIMP-2.10.app"; }
 vscode()  {  open $@ -a "/Applications/Visual Studio Code.app"; }
 rstudio() {  open $@ -a "/Applications/Rstudio.app"; }
 pycharm() {  open $@ -a "/Applications/Pycharm.app"; }
+idea()    {  open $@ -a "/Applications/IntelliJ IDEA.app/"; }
 settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 set_git_time() {
     if [[ -z $1 ]]; then
@@ -209,7 +211,7 @@ grab() {
   case $platform in
     aws)      key=~/.ssh/cloud_compute_aws.pem;;
     gcloud)   key=~/.ssh/google_compute_engine;;
-    azure)    key=;;
+    azure)    key=~/.ssh/id_rsa;;
   esac
   mkdir -p /cloud_computing/p${project_num}/remote
   rsync -Pav -e "ssh -i $key" clouduser@${ip}:${remote_folder}/ /cloud_computing/p${project_num}/remote/
@@ -220,7 +222,7 @@ upcloud() {
   case $platform in
     aws)      key=~/.ssh/cloud_compute_aws.pem;;
     gcloud)   key=~/.ssh/google_compute_engine;;
-    azure)    key=;;
+    azure)    key=~/.ssh/id_rsa;;
   esac
   rsync -Pav -e "ssh -i $key" /cloud_computing/p${project_num}/remote/ clouduser@${ip}:${remote_folder}/
 }
@@ -261,7 +263,7 @@ alias jn='jupyter notebook'
 alias sublime=subl
 alias matlab='/Applications/MATLAB.app/bin/matlab'
 alias checkstyle='java -jar /cloud_computing/checkstyle.jar -c /cloudcomputing_course_checkstyle.xml .'
-alias az='az account show | grep -oE "mwolff.+com"; az'
+alias az='az account show | grep -oE "mwolff.+com" | head -n1; az'
 alias apps='/Users/matthew/Desktop/grad_school/phd_apps/apps.r'
 alias tf='terraform'
 
@@ -314,7 +316,7 @@ alias dls='docker images'
 alias drun='docker run -it --rm'
 alias drm='docker rmi'
 alias dps='docker ps'
-alias dsjn='ds >/dev/null && docker run -it -p 8888:8888 --volume "`pwd`:/data" --hostname foundations datasci'
+alias dsjn='ds >/dev/null && docker run -it -p 8888:8888 --volume "`pwd`:/DataScienceProjects" --hostname foundations datasci'
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
