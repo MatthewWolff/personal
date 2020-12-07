@@ -36,7 +36,7 @@ export PATH=$HOME/.nimble/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_73.jdk/Contents/Home
 export GOPATH=$HOME/dev/go
 export PATH=$PATH:$(go env GOPATH)/bin
 
@@ -236,6 +236,22 @@ use_venv() {
   raw_prompt=$(perl -p -e 's/^\(.*?\) //' <<< "$PROMPT")
   PROMPT=$(perl -p -e "s/ > / ${fg_bold[white]}${venv_name}${reset_color}$&/" <<< "$raw_prompt")
 }
+lam_curr() {
+  awk '{sum+=$2;} END{print sum;}' ~/.lam_balance
+}
+lam() {
+  [[ -z $1 ]] && echo "Usage: lam <change> [note]" && exit 1 
+  change=$1;shift;note=$*
+  if [[ $change = curr ]]; then
+    lam_curr
+  else
+    echo $(date '+%Y-%h-%d,%H:%M:%S') $change $note >> ~/.lam_balance
+  fi
+}
+tell_lam() {
+  msg baby $(echo $'Hi baby, you have said the keyword `tiktok`, which requests a balance update.\nYour current balance is: ' $(lam curr))
+}
+alias tiktok=tell_lam
 
 
 ##################################################################################################
@@ -263,7 +279,6 @@ alias jn='jupyter notebook'
 alias sublime=subl
 alias matlab='/Applications/MATLAB.app/bin/matlab'
 alias checkstyle='java -jar /cloud_computing/checkstyle.jar -c /cloudcomputing_course_checkstyle.xml .'
-alias az='az account show | grep -oE "mwolff.+com" | head -n1; az'
 alias apps='/Users/matthew/Desktop/grad_school/phd_apps/apps.r'
 alias tf='terraform'
 
