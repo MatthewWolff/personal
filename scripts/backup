@@ -35,7 +35,10 @@ check_scripts() {
 }
 
 update_repo() {
+  git add --all
+  git stash
   git pull origin master
+  git stash pop
   git add --all
   scripts=$(for f in $(git status --porcelain | sed 's/^...//'); do echo -n "-m '$f' "; done)
   git commit -m "$timestamp -- backed up .zshrc && scripts" $scripts
