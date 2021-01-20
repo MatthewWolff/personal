@@ -7,12 +7,12 @@ xcode-select --install
 
 # brew installs
 brew update
-brew tap caskroom/cask # add another formula repository
+brew tap homebrew/cask # add another formula repository
 brew install r # install R before Rstudio
-brew cask install anaconda java iterm2 visual-studio-code gimp rstudio pycharm \
+brew install --cask anaconda java iterm2 visual-studio-code gimp rstudio pycharm \
   spectacle google-chrome spotify sublime-text # first line: dev tools \\ second line: utility
-brew install hub wget zsh bash scala apach-spark hadoop bfg node \
-  http-server sshpass shellcheck shpotify gdrive lolcat tree
+brew install hub wget zsh bash scala bfg node \
+  http-server shellcheck shpotify gdrive lolcat tree
 brew cleanup
 
 # r packages
