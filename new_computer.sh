@@ -16,7 +16,7 @@ brew install hub wget zsh bash scala bfg node \
 brew cleanup
 
 # r packages
-Rscript -e 'install.packages("tidyverse")' &
+Rscript -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")' &
 
 # chrome extensions
 open https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh \
