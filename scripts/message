@@ -6,11 +6,7 @@ recipient=$1 && shift
 message=$*
 email= # TODO: your imessage email
 
- case $recipient in
-	name)	recipient="+123456789"
-	name)	recipient="+123456789"
-	name)	recipient="+123456789"
-	name)	recipient="+123456789"
+case $recipient in
 	name)	recipient="+123456789"
 	name)	recipient="+123456789"
 esac

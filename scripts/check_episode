@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+link=https://kissanimefree.tv/episode/jujutsu-kaisen-tv-episode-18
+while true; do
+  curl --silent $link | grep 'looks like' &>/dev/null || break
+  sleep $((60 * 5))
+done
+open $link
