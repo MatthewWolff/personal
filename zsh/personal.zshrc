@@ -36,7 +36,7 @@ export PATH=$HOME/.nimble/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export GRB_LICENSE_FILE=/Users/matthew/Dev/Licenses/gurobi.lic
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_73.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
 export GOPATH=$HOME/dev/go
 export PATH=$PATH:$(go env GOPATH)/bin
 
@@ -189,7 +189,6 @@ use_credentials() {
   export AWS_ACCESS_KEY_ID=$(awk '{ print $2 }' <<< $data)
   export AWS_SECRET_ACCESS_KEY=$(awk '{ print $3}' <<< $data)
 }
-use_credentials ~/Downloads/CloudComputingCredentials.csv
 connect() {
   [[ ! $# = 2 ]] && echo 'usage: connect [platform] [ip address]' && return 1
   platform=$1; ip=$2
@@ -240,7 +239,7 @@ lam_curr() {
   awk '{sum+=$2;} END{print sum;}' ~/.lam_balance
 }
 lam() {
-  [[ -z $1 ]] && echo "Usage: lam <change> [note]" && exit 1 
+  [[ -z $1 ]] && echo "Usage: lam <change> [note]" && return 1 
   change=$1;shift;note=$*
   if [[ $change = curr ]]; then
     lam_curr
@@ -248,10 +247,13 @@ lam() {
     echo $(date '+%Y-%h-%d,%H:%M:%S') $change $note >> ~/.lam_balance
   fi
 }
-tell_lam() {
-  msg baby $(echo $'Hi baby, you have said the keyword `tiktok`, which requests a balance update.\nYour current balance is: ' $(lam curr))
+send_curr() {
+  message baby $(echo $'Your current balance is: ' $(lam curr))
 }
-alias tiktok=tell_lam
+balance() {
+  cat ~/.lam_balance
+  echo "Current: $(lam curr)"
+}
 
 
 ##################################################################################################
@@ -335,14 +337,13 @@ alias dsjn='ds >/dev/null && docker run -it -p 8888:8888 --volume "`pwd`:/DataSc
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
-alias grad='cd ~/Desktop/grad_school/ms/second_year/fall'
+alias grad='cd ~/Desktop/grad_school/ms/second_year/spring'
 alias college='cd ~/Desktop/College/'
 alias github='cd ~/github'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias cmu='cd /Users/matthew/Desktop/grad_school/ms/cmu'
 alias res='cd /Users/matthew/Desktop/grad_school/ms/first_year/schwartz/TreeDeconvolution'
 alias research='res'
-alias ml='cd /Users/matthew/Desktop/grad_school/ms/first_year/Spring/ml'
 alias docs='cd /Users/matthew/Documents'
 alias gen='cd /Users/matthew/Desktop/grad_school/ms/first_year/Spring/quantgen'
 alias ds='cd /Users/matthew/Desktop/grad_school/ms/second_year/fall/foundations_of_comp_data_sci'
