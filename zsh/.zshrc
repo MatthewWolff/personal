@@ -25,6 +25,7 @@ source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # valid 
 export SAVEHIST=999999999
 export HISTSIZE=$SAVEHIST
 export HISTFILE=~/.zsh_history
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 
