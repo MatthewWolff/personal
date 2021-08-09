@@ -10,7 +10,7 @@ brew update
 brew tap homebrew/cask 
 brew install r # install R before Rstudio
 brew install --cask anaconda iterm2 visual-studio-code gimp rstudio pycharm intellij-idea \
-  spectacle google-chrome spotify sublime-text # first line: dev tools \\ second line: utility
+  spectacle google-chrome spotify sublime-text vlc # first line: dev tools \\ second line: utility
 brew install openjdk@8 hub wget zsh bash scala bfg node \
   http-server shellcheck shpotify gdrive lolcat tree
 brew cleanup
