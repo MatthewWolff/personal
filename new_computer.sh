@@ -25,7 +25,7 @@ open https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfe
   -a "/Applications/Google Chrome.app/"
 
 # customization + personal credentials
-mkdir $HOME/scripts $HOME/development
+mkdir -p $HOME/scripts $HOME/development
 echo "cloning private repo and request credentials -- silencing self..."
 set +x && git clone https://github.com/MatthewWolff/private && set -x
 echo "finished cloning. re-enabling verbosity"
