@@ -13,6 +13,8 @@ brew install --cask anaconda iterm2 visual-studio-code gimp rstudio pycharm inte
   spectacle google-chrome spotify sublime-text vlc # first line: dev tools \\ second line: utility
 brew install openjdk@8 hub wget zsh bash scala bfg node \
   http-server shellcheck shpotify gdrive lolcat tree
+brew tap microsoft/git
+brew install --cask git-credential-manager-core
 brew cleanup
 
 # r packages
