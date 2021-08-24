@@ -68,9 +68,11 @@ sublime() {  open $@ -a "/Applications/Sublime Text.app/"; }
 pycharm() {  open $@ -a "/Applications/PyCharm.app"; }
 chrome()  {  open $@ -a "/Applications/Google Chrome.app/"; }
 clion()   {  open $@ -a "/Applications/Clion.app"; }
+idea()    {  open $@ -a "/Applications/IntelliJ IDEA.app/"; }
 settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 cd(){ builtin cd $@ && ls; }
 hfs(){ hadoop fs -$*; }
+
 use_venv() {
   if [[ -n $1 ]]; then  # assume we're not already in the venv
     venv_path=$1
@@ -80,6 +82,15 @@ use_venv() {
   venv_name=$(perl -nle 'print $& if m{^\(.*?\)}' <<< "$PROMPT")
   raw_prompt=$(perl -p -e 's/^\(.*?\) //' <<< "$PROMPT")
   PROMPT=$(perl -p -e "s/ > / ${fg_bold[white]}${venv_name}${reset_color}$&/" <<< "$raw_prompt")
+}
+
+use_credentials() {
+  [[ -z $1 ]] && echo 'usage: use_credentials [credential file.csv]' && return 1
+  [[ ! -f $1 ]] && echo 'invalid file provided' && return 1 
+  file=$1
+  data=$(cat $file | tail -n1 | sed -E $'s/,/\t/g')
+  export AWS_ACCESS_KEY_ID=$(awk '{ print $2 }' <<< $data)
+  export AWS_SECRET_ACCESS_KEY=$(awk '{ print $3}' <<< $data)
 }
 
 
@@ -108,24 +119,36 @@ alias gits='git status'
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
 
 # SPOTIFY
-alias spotify='if ! pgrep -x "Spotify" > /dev/null; then
-	       open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
+alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
 alias song='spotify status'
 alias play='spotify play'
 alias shuf='spotify toggle shuffle'
-alias s='shuf'
-alias skip='spotify next'
 alias next='spotify next'
-alias n='next'
-alias p='spotify prev'
+alias prev='spotify prev'
+alias skip=next
+alias n=next
+alias p=prev
 alias c='spotify status; spotify share | head -n 2'
-alias moderat='play artist moderat'
-alias m='moderat'
-alias eden='play artist eden'
-alias e='eden'
+alias disc='spotify play uri spotify:playlist:37i9dQZEVXcHX1sGVICYXF >/dev/null && echo playing discovery playlist...'
+alias werk='spotify play uri spotify:playlist:0c4qVPXwIarAIOIPsgI0Gp >/dev/null && echo playing werk playlist...'
+alias interstellar='spotify play uri spotify:album:3N8fGhRcHWqyy0SfWa92H0 >/dev/null && echo playing interstellar soundtrack...'
+alias moderat='spotify play uri spotify:artist:2exkZbmNqMKnT8LRWuxWgy >/dev/null && echo playing moderat...'
+alias shiloh='spotify play uri spotify:playlist:7qd17uUKPGKXXDzSLMu9dJ >/dev/null && echo playing shiloh dynasty...'
+alias eden='spotify play uri spotify:artist:1t20wYnTiAT0Bs7H1hv9Wt >/dev/null && echo playing eden...'
+alias xxx='spotify play uri spotify:artist:15UsOTVnJzReFVN1VCnxy4 >/dev/null && echo playing xxxTentacion...'
+alias i=interstellar
+alias m=moderat
+alias s=shiloh
+alias e=eden
+alias x=xxx  # xxxTentacion
+alias vu='spotify vol $(( $(spotify vol | perl -nle "print $& if m{[0-9]{1,2}(?=\.)}") + 11 ))'
+alias vd='spotify vol $(( $(spotify vol | perl -nle "print $& if m{[0-9]{1,2}(?=\.)}") - 9 ))'
 
 # DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'
 alias dls='docker images'
 alias drun='docker run -i -t'
 alias drm='docker rmi'
+
+# OTHER
+alias integrate='curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash'
