@@ -326,6 +326,7 @@ alias self='ssh $(networksetup -getcomputername).local'
 alias db='autotunnel datasci'
 alias die="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t bash -ci die"
 alias matthew='ssh 192.168.0.186'
+alias integrate='curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash'
 
 # DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'
