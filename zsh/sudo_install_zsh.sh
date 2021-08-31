@@ -45,6 +45,8 @@ stdout "Refreshed wolffy.zsh-theme"
    git clone -q https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/zsh-syntax-highlighting
 
 # change into zsh
-stdout 'zsh customization complete!\nYou may wish to make this your default shell. You can execute the following:\n`chsh -s $(command -v zsh)`'
-# chsh -s $(command -v zsh)
+stdout 'zsh customization complete!'
+if ! grep -q zsh <<< "$SHELL"; then
+   stdout 'you may wish to make this your default shell. you can execute the following:\n\tchsh -s $(command -v zsh)'
+fi
 exec zsh -l
