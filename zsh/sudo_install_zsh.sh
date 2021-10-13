@@ -43,6 +43,16 @@ stdout "Refreshed wolffy.zsh-theme"
 # install syntax highlighting
 [[ -d $HOME/.oh-my-zsh/zsh-syntax-highlighting ]] || \
    git clone -q https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/zsh-syntax-highlighting
+   
+# set up git global ignore if git is present
+if command -v git > /dev/null; then
+  global_gitignore=$HOME/.config/git/ignore # default loc: https://git-scm.com/docs/gitignore
+  mkdir -p $(dirname $global_gitignore)
+  if [[ ! -f $global_gitignore ]]; then 
+    echo $'# Globally Ignored Files\n' > $global_gitignore
+    curl -s https://www.toptal.com/developers/gitignore/api/macos,vim,linux,jetbrains+all >> $global_gitignore
+  fi
+fi
 
 # change into zsh
 stdout 'zsh customization complete!'
