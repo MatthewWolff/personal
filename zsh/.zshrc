@@ -62,7 +62,7 @@ fi
 # GIT SETUP
 # set up git global ignore if git is present
 global_gitignore=$HOME/.config/git/ignore # default loc: https://git-scm.com/docs/gitignore
-if command -v git > /dev/null && [[ ! -f $global_gitignore ]]; then
+if [[ ! -f $global_gitignore ]] && command -v git > /dev/null; then
   mkdir -p $(dirname $global_gitignore)
   echo $'# Globally Ignored Files\n' > $global_gitignore
   curl -s https://www.toptal.com/developers/gitignore/api/macos,vim,linux,jetbrains+all >> $global_gitignore
