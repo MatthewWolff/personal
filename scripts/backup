@@ -7,13 +7,18 @@ scripts=$HOME/.scripts
 # temporary files for files that will have redactions
 moss=$(mktemp)
 message=$(mktemp)
+cleaned_rc=$(mktemp)
 timestamp=$(date '+%Y-%m-%d')
-clean_up() { rm $moss $message; }
+clean_up() { rm $moss $message $cleaned_rc; }
 trap clean_up EXIT
 
 check_rc() {
   builtin cd zsh/
-  diff -q $HOME/.zshrc personal.zshrc &>/dev/null || cp $HOME/.zshrc personal.zshrc
+  perl -pe 's$(?<=webhook/alexa/).*(?=/)$<HOOK_ID>$g' $HOME/.zshrc > $cleaned_rc
+  if ! diff -q $cleaned_rc personal.zshrc &>/dev/null; then
+    # check if the RC files are different, aside from the webhooks
+    cp $cleaned_rc personal.zshrc
+  fi
   builtin cd ..
 }
 
@@ -21,7 +26,7 @@ check_scripts() {
   builtin cd scripts/
   perl -pe 's/(?<=$userid=)[0-9]+;/; # get ur own >:(/g' $scripts/moss > $moss
   perl -pe 's/.*\).*recipient=.*;;/\tname)\trecipient="+123456789"/g;
-  			s/(?<=email=).*/ # TODO: your imessage email/g' $scripts/message > $message
+  			    s/(?<=email=).*/ # TODO: your imessage email/g' $scripts/message > $message
   for s in $scripts/*; do
   	f=${s#$scripts/}
   	# handle redacted files differently
@@ -45,6 +50,17 @@ update_repo() {
   git push -u origin master &>/dev/null
 }
 
+backup_history() {
+  git clone git@github.com:MatthewWolff/private.git
+  cp $HOME/.zsh_history private/
+  builtin cd $_
+  git add .zsh_history
+  git commit -m "$timestamp - backed up zsh history"
+  git push -u origin master &>/dev/null
+  builtin cd ..
+  rm -rf private/
+}
+
 main() {
   builtin cd $git_loc
   git pull origin master >/dev/null
@@ -52,6 +68,8 @@ main() {
   check_rc
   check_scripts
   update_repo
+
+  backup_history
 }
 
 main && exit 0

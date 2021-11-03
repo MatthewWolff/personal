@@ -235,31 +235,10 @@ use_venv() {
   raw_prompt=$(perl -p -e 's/^\(.*?\) //' <<< "$PROMPT")
   PROMPT=$(perl -p -e "s/ > / ${fg_bold[white]}${venv_name}${reset_color}$&/" <<< "$raw_prompt")
 }
-lam_curr() {
-  awk '{sum+=$2;} END{print sum;}' ~/.lam_balance
-}
-lam() {
-  [[ -z $1 ]] && echo "Usage: lam <change> [note]" && return 1 
-  change=$1;shift;note=$*
-  if [[ $change = curr ]]; then
-    lam_curr
-  else
-    echo $(date '+%Y-%h-%d,%H:%M:%S') $change $note >> ~/.lam_balance
-  fi
-}
-send_curr() {
-  message baby $(echo $'Your current balance is: ' $(lam curr))
-}
-balance() {
-  cat ~/.lam_balance
-  echo "Current: $(lam curr)"
-}
-
 
 ##################################################################################################
 ## VARIABLES
 theme=$RANDOM_THEME # only valid if using random theme
-export CS_SERVER=rockhopper-08.cs.wisc.edu
 
 ##################################################################################################
 ## ALIASES
@@ -311,6 +290,7 @@ alias moderat='spotify play uri spotify:artist:2exkZbmNqMKnT8LRWuxWgy >/dev/null
 alias shiloh='spotify play uri spotify:playlist:7qd17uUKPGKXXDzSLMu9dJ >/dev/null && echo playing shiloh dynasty...'
 alias eden='spotify play uri spotify:artist:1t20wYnTiAT0Bs7H1hv9Wt >/dev/null && echo playing eden...'
 alias xxx='spotify play uri spotify:artist:15UsOTVnJzReFVN1VCnxy4 >/dev/null && echo playing xxxTentacion...'
+alias jazz='music && sleep 5 && play uri spotify:playlist:37i9dQZF1DWVqfgj8NZEp1'
 alias i=interstellar
 alias m=moderat
 alias s=shiloh
@@ -320,13 +300,9 @@ alias vu='spotify vol $(( $(spotify vol | perl -nle "print $& if m{[0-9]{1,2}(?=
 alias vd='spotify vol $(( $(spotify vol | perl -nle "print $& if m{[0-9]{1,2}(?=\.)}") - 9 ))'
 
 # SSH
-alias cs="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t zsh"
-alias cssftp="sshpass -f ~/.clearance sftp mwolff@$CS_SERVER"
 alias self='ssh $(networksetup -getcomputername).local'
 alias db='autotunnel datasci'
-alias die="sshpass -f ~/.clearance ssh mwolff@$CS_SERVER -t bash -ci die"
 alias matthew='ssh 192.168.0.186'
-alias integrate='curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash'
 
 # DOCKER
 alias docker_stop='docker rm $(docker ps -a -q)'
@@ -338,19 +314,48 @@ alias dsjn='ds >/dev/null && docker run -it -p 8888:8888 --volume "`pwd`:/DataSc
 
 # NAVIGATION
 alias dl='cd ~/Downloads'
-alias grad='cd ~/Desktop/grad_school/ms/second_year/spring'
 alias college='cd ~/Desktop/College/'
 alias github='cd ~/github'
 alias movies='open ~/Library/MATLAB/CS\ 368/'
 alias cmu='cd /Users/matthew/Desktop/grad_school/ms/cmu'
-alias res='cd /Users/matthew/Desktop/grad_school/ms/first_year/schwartz/TreeDeconvolution'
+alias grad=cmu
+alias res='cd /Users/matthew/Desktop/grad_school/ms/first_year/Schwartz_lab/TreeDeconvolution'
 alias research='res'
 alias docs='cd /Users/matthew/Documents'
-alias gen='cd /Users/matthew/Desktop/grad_school/ms/first_year/Spring/quantgen'
 alias ds='cd /Users/matthew/Desktop/grad_school/ms/second_year/fall/foundations_of_comp_data_sci'
 alias first='cd /Users/matthew/Desktop/grad_school/ms/first_year'
-alias cs301='cd /Users/matthew/Desktop/College/4Senior/Fall/cs301'
+alias second='cd /Users/matthew/Desktop/grad_school/ms/second_year'
 alias cc='cd /cloud_computing'
+
+# SMART HOME
+alias music='curl https://mkzense.com/webhook/alexa/<HOOK_ID>/MusicWebhook' # hook
+alias minions='curl https://mkzense.com/webhook/alexa/<HOOK_ID>/MinionsWebhook' # hook
+alias lights-on='curl https://mkzense.com/webhook/alexa/<HOOK_ID>/LightsOnWebhook' # hook
+alias lights-off='curl https://mkzense.com/webhook/alexa/<HOOK_ID>/LightsOffWebhook' # hook
+alias roomba-on='curl https://mkzense.com/webhook/alexa/<HOOK_ID>/RoombaOnWebhook' # hook
+alias roomba-off='curl https://mkzense.com/webhook/alexa/<HOOK_ID>/RoombaOffWebhook' # hook
+lights() {
+  if [[ -z $1 ]]; then
+    lights-on
+  elif [[ $1 = 'on' ]]; then
+    lights-on
+  elif [[ $1 = 'off' ]]; then
+    lights-off
+  else
+    echo 'Usage: lights [state: on | off; default=on]'
+  fi
+}
+roomba() {
+  if [[ -z $1 ]]; then
+    roomba-on
+  elif [[ $1 = 'on' ]]; then
+    roomba-on
+  elif [[ $1 = 'off' ]]; then
+    roomba-off
+  else
+    echo 'Usage: roomba [state: on | off; default=on]'
+  fi
+}
 
 # OTHER
 alias tweet='python ~/github/theDNABot/tweet.py'
@@ -358,4 +363,3 @@ alias calc='~/.calc/prog'
 alias DNA='dna'
 alias tweetas='tweet_as'
 alias obfuscate='bash-obfuscate'
-alias graphviz='open http://www.webgraphviz.com/'
