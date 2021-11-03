@@ -136,6 +136,7 @@ alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold bl
 alias spotify='if ! pgrep -x "Spotify" > /dev/null; then open /Applications/Spotify.app/ --background; sleep 3; fi; spotify'
 alias song='spotify status'
 alias play='spotify play'
+alias pause='spotify pause'
 alias shuf='spotify toggle shuffle'
 alias next='spotify next'
 alias prev='spotify prev'
