@@ -99,7 +99,7 @@ vscode()  {  open $@ -a "/Applications/Visual Studio Code.app"; }
 rstudio() {  open $@ -a "/Applications/Rstudio.app"; }
 pycharm() {  open $@ -a "/Applications/Pycharm.app"; }
 idea()    {  open $@ -a "/Applications/IntelliJ IDEA.app/"; }
-settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
+settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z_-]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 set_git_time() {
     if [[ -z $1 ]]; then
       echo "format: \"Sat Jan 12 19:01 2019 -0600\""
