@@ -22,6 +22,7 @@ plugins=(
 #### USER CONFIGURATION ####
 source $ZSH/oh-my-zsh.sh
 source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # valid command highlighter
+export PATH=$HOME/scripts:$PATH # scripts
 export SAVEHIST=999999999
 export HISTSIZE=$SAVEHIST
 export HISTFILE=~/.zsh_history
@@ -29,6 +30,7 @@ export PATH="/usr/local/opt/openjdk/bin:$PATH"
 export PATH="/usr/local/anaconda3/bin:$PATH"
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
+
 
 
 # .VIMRC
@@ -83,7 +85,7 @@ pycharm() {  open $@ -a "/Applications/PyCharm.app"; }
 chrome()  {  open $@ -a "/Applications/Google Chrome.app/"; }
 clion()   {  open $@ -a "/Applications/Clion.app"; }
 idea()    {  open $@ -a "/Applications/IntelliJ IDEA.app/"; }
-settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
+settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z_-]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 cd(){ builtin cd $@ && ls; }
 hfs(){ hadoop fs -$*; }
 
