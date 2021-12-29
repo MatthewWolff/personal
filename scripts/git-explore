@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [[ ! -d .git ]]; then return; fi
+echo --------------------------------------------
+for file in $(find .git/objects -type f); do
+  HASH=$(basename $(dirname $file))$(basename $file)
+  TYPE=$(git cat-file -t $HASH)
+  echo HASH: $HASH
+  echo TYPE: $TYPE
+  echo CONTENTS:
+  git cat-file -p $HASH
+  echo --------------------------------------------
+done
