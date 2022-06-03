@@ -26,15 +26,6 @@ function ssh_connection() {
   fi
 }
 
-function work_env() {
-  case $HOSTNAME in
-    *prod*)     echo "$OB${RED}PRODUCTION$CB$HPIPE";;
-    *dev*)      echo "$OB${YELLOW}DEV$CB$HPIPE";;
-    *test*)     echo "$OB${GREEN}TEST$CB$HPIPE";;
-    *)          echo "";;
-  esac
-}
-
 PS_LINE=`printf -- '- %.0s' {1..200}`
 function parse_git_branch {
   PS_BRANCH=''
@@ -49,12 +40,16 @@ function parse_git_branch {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   PS_BRANCH="(git ${ref#refs/heads/}) "
 }
+function box_name {
+    [ -f ~/.box-name ] && cat ~/.box-name || echo ${SHORT_HOST:-$HOST}
+}
 PROMPT_COMMAND=parse_git_branch
 PS_GIT="$YELLOW\$PS_BRANCH"
-PS_TIME="\[\033[\$((COLUMNS-10))G\] $OB\t$CB"
+PS_TIME="\[\033[\$((COLUMNS-10))G\] $OB\T$CB"
 HIST_NO="$OB\!$CB"
 EXIT_CODE="$OB$ERR$CB"
-PS_INFO="$UP_PIPE$(work_env)$OB$BLUE\w$CB$HPIPE$OB$WHITE\u$YELLOW@$WHITE\h$CB$HPIPE${HIST_NO} $(ssh_connection)"
+
+PS_INFO="$UP_PIPE$OB$BLUE\w$CB$HPIPE$OB$WHITE\u$YELLOW@$WHITE$(box_name)$CB$HPIPE${HIST_NO} $(ssh_connection)"
 export PS1="${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}$DOWN_PIPE${EXIT_CODE} > "
 
 ### ETERNAL BASH HISTORY
