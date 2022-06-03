@@ -43,11 +43,14 @@ function git_prompt() {
   fi
 }
 
-RPROMPT='${op}%D{%L:%M:%S}${cp}'
+local right_prompt='${op}%D{%L:%M:%S}${cp}'; local color_chars=13
+local main_prompt='$fg[green]╰─${smiley} >'
 if which ioreg &>/dev/null; then # mac only >:)      (see source code @ top for linux)
-  PROMPT=$'$fg[green]╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt) \n$fg[green]╰─${smiley} > '
+  local left_prompt='$fg[green]╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt)'
 else
-  PROMPT=$'$fg[green]╭─${path_p}─${user_host}─${hist_no} $(ssh_connection) $(git_prompt) \n$fg[green]╰─${smiley} > ' # forced interpolation for \n
+  local left_prompt='$fg[green]╭─${path_p}─${user_host}─${hist_no} $(ssh_connection) $(git_prompt)'
 fi
+PROMPT=$(printf "%*s\r%s\n%s " "(( ${COLUMNS} + ${color_chars} ))" "${right_prompt}" "${left_prompt}" "${main_prompt}")
+
 local cur_cmd="${op}%_${cp}"
-PROMPT2="${cur_cmd}> "
+PROMPT2="${cur_cmd}> " # used when shell needs more info
