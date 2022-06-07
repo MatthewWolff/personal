@@ -43,7 +43,8 @@ function git_prompt() {
   fi
 }
 
-local right_prompt='${op}%D{%L:%M:%S}${cp}'; local color_chars=13
+local color_chars=11  # invisible spacing associated with color codes
+local right_prompt='${op}%D{%L:%M:%S}${cp}'
 local main_prompt='$fg[green]╰─${smiley} >'
 if which ioreg &>/dev/null; then # mac only >:)      (see source code @ top for linux)
   local left_prompt='$fg[green]╭─${path_p}─${user_host}─$(battery_pct_prompt)─${hist_no} $(ssh_connection) $(git_prompt)'
