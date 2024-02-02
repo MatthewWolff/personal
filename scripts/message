@@ -1,17 +1,54 @@
-#!/bin/bash
-set -e
-if [[ $# -lt 2 ]]; then echo "Usage: message [address] [message]"; exit 1; fi
+#!/usr/bin/osascript
 
-recipient=$1 && shift
-message=$*
-email= # TODO: your imessage email
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Text Person
+# @raycast.mode silent
 
-case $recipient in
-	name)	recipient="+123456789"
-	name)	recipient="+123456789"
-esac
+# Optional parameters:
+# @raycast.icon 💬
+# @raycast.argument1 { "type": "text", "placeholder": "Enter quick-contact name" }
+# @raycast.argument2 { "type": "text", "placeholder": "Enter text message" }
 
-/usr/bin/osascript -e 'tell application "Messages"
-send "'"$message"'" to buddy "'"$recipient"'" of service "'"E:$email"'"
-end tell'
-echo "Sent"
+# Documentation:
+# @raycast.description Send Person a Text Message
+# @raycast.author Matthew Wolff
+# @raycast.authorURL https://wolff.sh
+
+on getContactList()
+  return {¬
+  {name: "mom", phoneNumber: "(XXX) XXX-XXXX" }, ¬
+  {name: "dad", phoneNumber: "(XXX) XXX-XXXX" } ¬
+}
+end getContactList
+
+on convertListToString(theList)
+  set AppleScript's text item delimiters to " "
+  set theString to theList as string
+  set AppleScript's text item delimiters to ""
+  return theString
+end convertListToString
+
+on lookupContact(target)
+  repeat with contact in getContactList()
+    if name of contact = target then
+      return phoneNumber of contact
+    end if
+  end repeat
+  error "Contact with name '" & target & "' not found in contacts."
+end lookupContact
+
+on run argv
+  set target to item 1 of argv
+  set contact to lookupContact(target)
+  set remainingArgs to text items 2 thru length of argv
+  set message to convertListToString(remainingArgs)
+
+  tell application "Messages"
+    set targetBuddy to contact
+    set targetService to id of 1st account whose service type = iMessage
+    set theBuddy to participant contact of account id targetService
+    send message to theBuddy
+  end tell
+  log "Message sent"
+end run
