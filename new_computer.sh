@@ -9,7 +9,7 @@ xcode-select --install
 brew update
 brew tap homebrew/cask 
 brew install r # install R before Rstudio
-brew install --cask docker anaconda qlmarkdown visual-studio-code sublime-text rstudio pycharm intellij-idea \
+brew install --cask docker anaconda qlmarkdown visual-studio-code sublime-text rstudio jetbrains-toolbox \
   rectangle google-chrome spotify raycast vlc gimp iterm2 notion anki git-credential-manager-core # first line: dev tools \\ second line: utility
 brew install awscli imagemagick hub zsh bash nvm http-server shellcheck shpotify gdrive lolcat tree grep curl wget sqlite ssh-copy-id
 brew tap microsoft/git
