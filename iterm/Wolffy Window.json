@@ -23,6 +23,7 @@
   },
   "HotKey Window Floats" : false,
   "Right Option Key Sends" : 0,
+  "Show Status Bar" : true,
   "Character Encoding" : 4,
   "Selection Color" : {
     "Green Component" : 0.8353000283241272,
@@ -51,6 +52,79 @@
   ],
   "Scrollback Lines" : 0,
   "HotKey Window Reopens On Activation" : false,
+  "Status Bar Layout" : {
+    "components" : [
+      {
+        "class" : "iTermStatusBarCPUUtilizationComponent",
+        "configuration" : {
+          "knobs" : {
+            "base: priority" : 2,
+            "shared background color" : {
+              "Red Component" : 0.35057535767555237,
+              "Color Space" : "P3",
+              "Blue Component" : 0.58111435174942017,
+              "Alpha Component" : 1,
+              "Green Component" : 0.41559624671936035
+            }
+          },
+          "layout advanced configuration dictionary value" : {
+            "remove empty components" : false,
+            "font" : ".SFNS-Regular 12",
+            "algorithm" : 0,
+            "auto-rainbow style" : 0
+          }
+        }
+      },
+      {
+        "class" : "iTermStatusBarMemoryUtilizationComponent",
+        "configuration" : {
+          "knobs" : {
+            "base: priority" : 2,
+            "shared background color" : {
+              "Red Component" : 0.36998802423477173,
+              "Color Space" : "P3",
+              "Blue Component" : 0.31083032488822937,
+              "Alpha Component" : 1,
+              "Green Component" : 0.5670018196105957
+            }
+          },
+          "layout advanced configuration dictionary value" : {
+            "remove empty components" : false,
+            "font" : ".SFNS-Regular 12",
+            "algorithm" : 0,
+            "auto-rainbow style" : 0
+          }
+        }
+      },
+      {
+        "class" : "iTermStatusBarNetworkUtilizationComponent",
+        "configuration" : {
+          "knobs" : {
+            "base: priority" : 5,
+            "shared background color" : {
+              "Red Component" : 0.570781409740448,
+              "Color Space" : "P3",
+              "Blue Component" : 0.32851365208625793,
+              "Alpha Component" : 1,
+              "Green Component" : 0.5141146183013916
+            }
+          },
+          "layout advanced configuration dictionary value" : {
+            "remove empty components" : false,
+            "font" : ".SFNS-Regular 12",
+            "algorithm" : 0,
+            "auto-rainbow style" : 0
+          }
+        }
+      }
+    ],
+    "advanced configuration" : {
+      "remove empty components" : false,
+      "font" : ".SFNS-Regular 12",
+      "algorithm" : 0,
+      "auto-rainbow style" : 0
+    }
+  },
   "Flashing Bell" : false,
   "BM Growl" : true,
   "Ansi 3 Color" : {
@@ -58,6 +132,7 @@
     "Blue Component" : 0,
     "Red Component" : 0.73333334922790527
   },
+  "Open Password Manager Automatically" : false,
   "Use Non-ASCII Font" : false,
   "Shortcut" : "",
   "Background Image Location" : "",
@@ -279,7 +354,7 @@
     "Blue Component" : 0,
     "Red Component" : 0.73333334922790527
   },
-  "Name" : "Hotkey Window",
+  "Name" : "Wolffy Window",
   "Blinking Cursor" : false,
   "Guid" : "DDE0B760-5947-405E-9F12-80A2F548D426",
   "Idle Code" : 0,
@@ -335,6 +410,7 @@
   },
   "Screen" : -1,
   "HotKey Characters Ignoring Modifiers" : "\u001b",
+  "Load Shell Integration Automatically" : true,
   "Non Ascii Font" : "Monaco 12",
   "Ansi 13 Color" : {
     "Green Component" : 0.3333333432674408,
