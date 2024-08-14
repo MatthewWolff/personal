@@ -14,7 +14,7 @@ brew install --cask docker anaconda qlmarkdown visual-studio-code sublime-text r
 brew install --cask google-chrome iterm2 # possibly already installed
 brew install awscli imagemagick hub zsh bash nvm http-server shellcheck shpotify gdrive lolcat tree grep curl wget sqlite ssh-copy-id
 brew tap microsoft/git
-brew install --cask git-credential-manager-core
+brew install --cask git-credential-manager
 # brew tap amazon/amazon "ssh://git.amazon.com/pkg/HomebrewAmazon"
 brew cleanup
 
