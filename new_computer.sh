@@ -27,7 +27,7 @@ Rscript -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org"
 # customization + personal credentials
 mkdir -p $HOME/scripts $HOME/development
 echo "cloning private repo and request credentials -- silencing self..."
-set +x && git clone https://github.com/MatthewWolff/private && set -x
+set -x && git clone https://github.com/MatthewWolff/private && set +x
 echo "finished cloning. re-enabling verbosity"
 bash private/.installer && rm -rf private/
 
