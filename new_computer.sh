@@ -10,7 +10,7 @@ brew update
 brew tap homebrew/cask 
 brew install r # install R before Rstudio
 brew install --cask docker anaconda qlmarkdown visual-studio-code sublime-text rstudio jetbrains-toolbox intellij-idea pycharm \
-  spectacle spotify raycast vlc gimp notion anki # first line: dev tools \\ second line: utility
+  spectacle spotify raycast vlc gimp notion anki discord # first line: dev tools \\ second line: utility
 brew install --cask google-chrome iterm2 # possibly already installed
 brew install awscli imagemagick hub zsh bash nvm http-server shellcheck shpotify gdrive lolcat tree grep curl wget sqlite ssh-copy-id
 brew tap microsoft/git
