@@ -67,6 +67,7 @@ global_gitignore=$HOME/.config/git/ignore # default loc: https://git-scm.com/doc
 if [[ ! -f $global_gitignore ]] && command -v git > /dev/null; then
   mkdir -p $(dirname $global_gitignore)
   echo $'# Globally Ignored Files\n' > $global_gitignore
+  echo $'build\nnode_modules\nannotation-generated-src\n*.iml\n*.idea\n' >> $global_gitignore
   curl -s https://www.toptal.com/developers/gitignore/api/macos,vim,linux,jetbrains+all >> $global_gitignore
 
   # set pull method if not already specified
