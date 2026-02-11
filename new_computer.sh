@@ -1,37 +1,104 @@
 #!/bin/bash
-set -x
+set -e
 
-# primary utilities (xcode + brew)
-xcode-select --install
+echo "==> Installing Xcode Command Line Tools..."
+xcode-select --install 2>/dev/null || echo "Already installed"
+
+echo "==> Installing Homebrew..."
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# brew installs
-brew update
-brew tap homebrew/cask 
-brew install r # install R before Rstudio
-brew install --cask docker anaconda qlmarkdown visual-studio-code sublime-text rstudio jetbrains-toolbox intellij-idea pycharm \
-  spectacle spotify raycast vlc gimp notion anki discord # first line: dev tools \\ second line: utility
-brew install --cask google-chrome iterm2 # possibly already installed
-brew install awscli imagemagick hub zsh bash nvm http-server shellcheck shpotify gdrive lolcat tree grep curl wget sqlite ssh-copy-id
-brew tap microsoft/git
-brew install --cask git-credential-manager
-# brew tap amazon/amazon "ssh://git.amazon.com/pkg/HomebrewAmazon"
-brew cleanup
+echo "==> Installing CLI tools..."
+brew install \
+  awscli \
+  curl \
+  gdrive \
+  git-delta \
+  grep \
+  hub \
+  http-server \
+  imagemagick \
+  nvm \
+  qlmarkdown \
+  shellcheck \
+  shpotify \
+  sqlite \
+  ssh-copy-id \
+  tree \
+  wget
 
-# install latest version of node
-nvm install node
+echo "==> Installing modern CLI tools..."
+brew install \
+  bat \
+  eza \
+  fd \
+  fzf \
+  ripgrep
 
-# r packages
+echo "==> Installing development tools..."
+brew install --cask \
+  docker \
+  font-hack-nerd-font \
+  intellij-idea \
+  jetbrains-toolbox \
+  pycharm \
+  sublime-text \
+  visual-studio-code
+
+echo "==> Installing productivity apps..."
+brew install --cask \
+  discord \
+  gimp \
+  google-chrome \
+  iterm2 \
+  notion \
+  obsidian \
+  raycast \
+  spectacle \
+  spotify \
+  vlc
+
+echo "==> Installing data science tools..."
+brew install r
+brew install --cask anaconda rstudio
 Rscript -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")' &
 
-# customization + personal credentials
-mkdir -p $HOME/scripts $HOME/development
-echo "cloning private repo and request credentials -- silencing self..."
-set -x && git clone https://github.com/MatthewWolff/private && set +x
-echo "finished cloning. re-enabling verbosity"
-bash private/.installer && rm -rf private/
+echo "==> Installing Git Credential Manager..."
+brew tap microsoft/git
+brew install --cask git-credential-manager
 
-# shell setup
+echo "==> Setting up Amazon tap..."
+brew tap amazon/amazon "ssh://git.amazon.com/pkg/HomebrewAmazon"
+
+brew cleanup
+
+echo "==> Setting up Node.js..."
+source $(brew --prefix nvm)/nvm.sh
+nvm install node
+
+echo "==> Setting up directories..."
+mkdir -p "$HOME/scripts" "$HOME/development"
+
+echo "==> Cloning private configuration..."
+git clone https://github.com/MatthewWolff/private "$HOME/development/private"
+bash "$HOME/development/private/.installer"
+rm -rf "$HOME/development/private"
+
+echo "==> Configuring shell..."
 curl -fsSL zsh.wolff.sh | bash
-curl -fsSL bash.wolff.sh | bash
-touch $HOME/.hushlogin
+touch "$HOME/.hushlogin"
+
+echo "==> Configuring macOS defaults..."
+# Show path bar in Finder
+defaults write com.apple.finder ShowPathbar -bool true
+# Disable .DS_Store on network volumes
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+echo "==> Generating SSH key..."
+if [[ ! -f "$HOME/.ssh/id_ed25519" ]]; then
+  ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)" -f "$HOME/.ssh/id_ed25519" -N ""
+  echo "SSH public key:"
+  cat "$HOME/.ssh/id_ed25519.pub"
+  echo "Add this to GitHub: https://github.com/settings/keys"
+fi
+
+echo "==> Setup complete!"

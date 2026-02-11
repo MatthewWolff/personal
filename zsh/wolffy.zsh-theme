@@ -37,9 +37,8 @@ function ssh_connection() {
 
 function git_prompt() {
   if [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1; then
-    gitprompt=$(sed "s/:/ /" <<< `_omz_git_prompt_info` | sed "s/[()]//g")
-    repo=$(basename `git rev-parse --show-toplevel`)
-    echo "%{$fg[yellow]%}($gitprompt $repo)%{$reset_color%} "
+    gitprompt=$(sed "s/[()]//g" <<< `_omz_git_prompt_info`)
+    echo "%{$fg[yellow]%}($gitprompt)%{$reset_color%} "
   fi
 }
 
