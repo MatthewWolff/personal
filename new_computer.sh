@@ -32,7 +32,8 @@ brew install \
   eza \
   fd \
   fzf \
-  ripgrep
+  ripgrep \
+  zoxide
 
 echo "==> Installing development tools..."
 brew install --cask \

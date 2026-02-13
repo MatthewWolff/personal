@@ -224,9 +224,6 @@ if command -v eza > /dev/null; then
   alias l='eza -lah --icons --group-directories-first'
   alias lt='eza --tree --level=2 --icons'
   alias la='eza -lah --icons --group-directories-first'
-  cd() { builtin cd "$@" && eza --icons; }
-else
-  cd() { builtin cd "$@" && ls; }
 fi
 
 # bat (better cat) - https://github.com/sharkdp/bat
@@ -277,6 +274,14 @@ if command -v fzf > /dev/null; then
   if command -v bat > /dev/null; then
     export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}'"
   fi
+fi
+
+# zoxide (smarter cd) - https://github.com/ajeetdsouza/zoxide
+if command -v zoxide > /dev/null; then
+  eval "$(zoxide init zsh)"
+  cd() { z "$@" && ls; }
+else
+  cd() { builtin cd "$@" && ls; }
 fi
 
 # ============================================================================
