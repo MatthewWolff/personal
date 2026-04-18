@@ -53,7 +53,6 @@ stdout "Refreshed wolffy.zsh-theme"
 if [[ ! -d $HOME/.oh-my-zsh/zsh-syntax-highlighting ]]; then
   stdout "Installing zsh plugins..."
   git clone -q https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/zsh-syntax-highlighting
-  git clone -q https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 fi
 
 # change into zsh

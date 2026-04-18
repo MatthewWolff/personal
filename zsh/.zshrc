@@ -1,3 +1,7 @@
+
+# Kiro CLI pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+
 # ============================================================================
 # OH-MY-ZSH CONFIGURATION
 # ============================================================================
@@ -8,14 +12,17 @@ ZSH_THEME="wolffy"
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" "clean" "wolffy")
 
 DISABLE_AUTO_TITLE="false"
-ENABLE_CORRECTION="true"
+if [[ "$TERM_PROGRAM" == "kiro" || -n "$KIRO_CLI_USING_ZSH_AUTOSUGGESTIONS" ]]; then
+  ENABLE_CORRECTION="false"
+else
+  ENABLE_CORRECTION="true"
+fi
 COMPLETION_WAITING_DOTS="true"
 
 plugins=(
   git
   battery
   aws
-  zsh-autosuggestions
   colored-man-pages
 )
 
@@ -32,11 +39,6 @@ export HISTSIZE=$SAVEHIST
 export HISTFILE=~/.zsh_history
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
-
-# Path
-export PATH="/usr/local/opt/openjdk/bin:$PATH"
-export PATH="$HOME/.toolbox/bin:$PATH"
-export PATH="$HOME/scripts:$PATH"
 
 # SSH
 CLOUD_DESKTOP=cloudminion.aka.corp.amazon.com
@@ -91,7 +93,7 @@ node_modules
 annotation-generated-src
 *.iml
 IGNORE
-  
+
   if ! curl -sf https://www.toptal.com/developers/gitignore/api/macos,vim,linux,jetbrains+all >> $global_gitignore; then
     echo "Warning: Failed to fetch gitignore templates" >&2
   fi
@@ -118,7 +120,11 @@ fi
 
 addalias() {
   new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
-  echo $new_alias >> ~/.zshrc
+  # Insert after the last existing alias line instead of appending to EOF
+  last_alias_line=$(grep -n '^alias ' ~/.zshrc | tail -1 | cut -d: -f1)
+  sed -i '' "${last_alias_line}a\\
+${new_alias}
+" ~/.zshrc
   source ~/.zshrc
 }
 
@@ -153,6 +159,7 @@ alias searchall='grep -rn $PWD/* -e'
 alias self='ssh `networksetup -getcomputername`.local'
 alias shrink="export RPROMPT=; export PS1=\"$USER > \""
 alias src='source ~/.zshrc'
+alias yolo='claude --dangerously-skip-permissions'
 
 # ============================================================================
 # ALIASES - GIT
@@ -166,6 +173,7 @@ alias gits='git status'
 alias gitup='git branch --set-upstream-to=origin/mainline $(git rev-parse --abbrev-ref HEAD)'
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
 alias glh='git log | head'
+alias gll='git log | less'
 alias pull='git pull origin $(git_current_branch)'
 alias push='git push -u origin $(git_current_branch)'
 
@@ -238,9 +246,9 @@ if command -v rg > /dev/null; then
 fi
 
 # fd (better find) - https://github.com/sharkdp/fd
-if command -v fd > /dev/null; then
-  alias find='fd'
-fi
+#if command -v fd > /dev/null; then
+ # alias find='fd'
+#fi
 
 # fzf (fuzzy finder) - https://github.com/junegunn/fzf
 if command -v fzf > /dev/null; then
@@ -277,10 +285,11 @@ if command -v fzf > /dev/null; then
 fi
 
 # zoxide (smarter cd) - https://github.com/ajeetdsouza/zoxide
-if command -v zoxide > /dev/null; then
+# Skip zoxide in Claude Code sessions (it interferes with shell commands)
+if command -v zoxide > /dev/null && [[ -z "$CLAUDECODE" ]]; then
   eval "$(zoxide init zsh)"
   cd() { z "$@" && ls; }
-else
+elif [[ -z "$CLAUDECODE" ]]; then
   cd() { builtin cd "$@" && ls; }
 fi
 
@@ -363,12 +372,16 @@ alias bb-all='brazil-recursive-cmd --allPackages brazil-build'
 alias bb-clean='brazil-recursive-cmd --allPackages brazil-build clean'
 alias bbr='brazil-recursive-cmd brazil-build'
 alias bws='brazil ws'
+alias bwsrp='bws remove -p'
 alias cloud="ssh $CLOUD_DESKTOP"
+alias git-all="brazil-recursive-cmd --allPackages 'pwd && git status'"
 alias kinit=/usr/bin/kinit
+alias kiroo='kiro-cli chat --trust-tools=fs_read,@builder-mcp/grep,@builder-mcp/glob,@builder-mcp/ReadInternalWebsites,@builder-mcp/WorkspaceSearch,@builder-mcp/ToolReactivationTool,@builder-mcp/TicketingReadActions,@builder-mcp/InternalSearch,@builder-mcp/InternalCodeSearch,@builder-mcp/SkillsTool,web_fetch,web_search,use_aws,code,introspect,shell,fs_write'
 alias ndr='ninja-dev-sync -remove'
 alias nds=ninja-dev-sync
 alias ndsl='nds -list'
 alias ndsr='nds -remove '
+alias oncall='cd ~/workplace/oncall/src/MonaLisaShopperUnderstandingCDK && kiroo "you are an oncall assistant"'
 alias sam='brazil-build-tool-exec sam'
 alias update='bws sync -md; brazil-recursive-cmd "git pull --autostash" --allPackages'
 
@@ -376,22 +389,35 @@ alias update='bws sync -md; brazil-recursive-cmd "git pull --autostash" --allPac
 # EXPORTS & SOURCES
 # ============================================================================
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
 source "$HOME/.brazil_completion/zsh_completion"
 
-export PATH="$PATH:/opt/homebrew/anaconda3/bin"
-export PATH="/opt/homebrew/opt/curl/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-
 export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)" # explicitly use java 1.8
-export PATH="$JAVA_HOME/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
+# Path
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+export PATH="$JAVA_HOME/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.toolbox/bin:$PATH"
+export PATH="$HOME/.aim/mcp-servers:$PATH"
+export PATH="$HOME/.rodar/bin:$PATH"
+export PATH="$HOME/scripts:$PATH"
+export PATH="$PATH:/opt/homebrew/anaconda3/bin"
+
 # ============================================================================
 # INTEGRATIONS
 # ============================================================================
+
+if [[ "$TERM_PROGRAM" == "kiro" || -n "$KIRO_CLI_USING_ZSH_AUTOSUGGESTIONS" ]]; then
+  unsetopt correct_all correct
+  alias cd='builtin cd'
+fi
 
 # iTerm2
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh" || true
@@ -401,3 +427,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/.local/share/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/.local/share/kiro-cli/shell/zshrc.post.zsh" || :
+
+# Kiro CLI post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
