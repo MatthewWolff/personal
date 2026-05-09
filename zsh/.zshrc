@@ -41,7 +41,7 @@ setopt hist_ignore_all_dups
 setopt hist_ignore_space
 
 # SSH
-CLOUD_DESKTOP=cloudminion.aka.corp.amazon.com
+CLOUD_DESKTOP=cloudmartian.aka.corp.amazon.com
 
 # ============================================================================
 # VIMRC SETUP
@@ -71,6 +71,37 @@ function! Strip()               " strip whitespace from end of lines ( call Stri
   :'^
 endfunction
 """wolffy .vimrc end"""
+EOF
+fi
+
+# ============================================================================
+# TMUX SETUP
+# ============================================================================
+
+touch ~/.tmux.conf
+if ! grep -q wolffy ~/.tmux.conf; then
+  cat << 'EOF' >> ~/.tmux.conf
+# ===== wolffy .tmux.conf begin =====
+set  -g  mouse on                            # (mouse) drag to resize, wheel scrolls into copy-mode
+set  -g  history-limit 50000                 # (hl)    scrollback buffer lines per pane
+set  -g  base-index 1                        # (bi)    number windows from 1 instead of 0
+setw -g  pane-base-index 1                   # (pbi)   number panes from 1 to match windows
+set  -g  renumber-windows on                 # (rw)    close gaps in window numbering on close
+set  -sg escape-time 10                      # (esc)   shorter <Esc> delay so vim feels native
+set  -g  default-terminal "screen-256color"  # (dt)    enable 256-color support inside tmux
+set  -g  set-clipboard on                    # (osc52) copy selections to local iTerm2 clipboard over SSH
+setw -g  mode-keys vi                        # (mk)    vi-style keys in copy-mode (h j k l / ? v y)
+
+# bindings -- prefix is C-b unless rebound
+bind r source-file ~/.tmux.conf \; display "tmux config reloaded"
+bind m set -g mouse \; display "mouse: #{?mouse,on,off}"   # toggle mouse on/off (escape to native iTerm2 selection)
+bind | split-window -h -c "#{pane_current_path}"           # vertical split keeps current directory
+bind - split-window -v -c "#{pane_current_path}"           # horizontal split keeps current directory
+
+# copy-mode-vi -- v begins selection, y yanks to system clipboard via OSC 52
+bind -T copy-mode-vi v send -X begin-selection
+bind -T copy-mode-vi y send -X copy-selection-and-cancel
+# ===== wolffy .tmux.conf end =====
 EOF
 fi
 
@@ -211,6 +242,13 @@ alias m='moderat'
 alias moderat='spotify play uri spotify:playlist:1DWC6bqpH4fYVTrwEmOuvb >/dev/null && echo playing moderat...'
 alias x=xxx
 alias xxx='spotify play uri spotify:artist:15UsOTVnJzReFVN1VCnxy4 >/dev/null && echo playing xxxTentacion...'
+
+# ============================================================================
+# ALIASES - TMUX
+# ============================================================================
+
+alias tmns='tmux new -s'
+alias tma='tmux attach -t'
 
 # ============================================================================
 # ALIASES - DOCKER
@@ -376,7 +414,7 @@ alias bwsrp='bws remove -p'
 alias cloud="ssh $CLOUD_DESKTOP"
 alias git-all="brazil-recursive-cmd --allPackages 'pwd && git status'"
 alias kinit=/usr/bin/kinit
-alias kiroo='kiro-cli chat --trust-tools=fs_read,@builder-mcp/grep,@builder-mcp/glob,@builder-mcp/ReadInternalWebsites,@builder-mcp/WorkspaceSearch,@builder-mcp/ToolReactivationTool,@builder-mcp/TicketingReadActions,@builder-mcp/InternalSearch,@builder-mcp/InternalCodeSearch,@builder-mcp/SkillsTool,web_fetch,web_search,use_aws,code,introspect,shell,fs_write'
+alias kiroo='kiro-cli chat --trust-all-tools'
 alias ndr='ninja-dev-sync -remove'
 alias nds=ninja-dev-sync
 alias ndsl='nds -list'
@@ -430,3 +468,9 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
+# Anaconda python — override Homebrew's python3 with Anaconda's
+# PATH reordering doesn't work due to typeset -U dedup, so we use a direct symlink
+# in /opt/homebrew/bin which Homebrew resolves first
+alias python3="/opt/homebrew/anaconda3/bin/python3"
+alias pip3="/opt/homebrew/anaconda3/bin/pip3"
