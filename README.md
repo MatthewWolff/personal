@@ -15,7 +15,7 @@ curl -fsSL https://raw.githubusercontent.com/MatthewWolff/personal/main/new_comp
 ```
 
 This installs:
-- Homebrew and essential CLI tools (awscli, git-delta, ripgrep, fzf, bat, eza, fd)
+- Homebrew and essential CLI tools (awscli, git-delta, ripgrep, fzf, bat, eza)
 - Development environments (Docker, IntelliJ, PyCharm, VS Code, Sublime Text)
 - Productivity apps (iTerm2, Raycast, Spectacle, Notion, Obsidian)
 - Data science stack (R, RStudio, Anaconda, tidyverse)

@@ -3,12 +3,28 @@
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
 # ============================================================================
+# PLATFORM DETECTION
+# ============================================================================
+
+case "$(uname -s)" in
+  Darwin*) IS_MAC=true;  IS_LINUX=false ;;
+  Linux*)  IS_MAC=false; IS_LINUX=true  ;;
+  *)       IS_MAC=false; IS_LINUX=false ;;
+esac
+
+# ============================================================================
 # OH-MY-ZSH CONFIGURATION
 # ============================================================================
 
 export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="wolffy"
+# candy-kingdom on the remote Cloud Desktop is a deliberate visual cue so the
+# prompt looks different from the local machine; wolffy everywhere else.
+if $IS_LINUX; then
+  ZSH_THEME="candy-kingdom"
+else
+  ZSH_THEME="wolffy"
+fi
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" "clean" "wolffy")
 
 DISABLE_AUTO_TITLE="false"
@@ -40,7 +56,7 @@ export HISTFILE=~/.zsh_history
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 
-# SSH
+# SSH -- the Cloud Desktop this machine syncs to
 CLOUD_DESKTOP=cloudmartian.aka.corp.amazon.com
 
 # ============================================================================
@@ -101,16 +117,35 @@ bind - split-window -v -c "#{pane_current_path}"           # horizontal split ke
 # copy-mode-vi -- v begins selection, y yanks to system clipboard via OSC 52
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi y send -X copy-selection-and-cancel
+
+# ===== plugins (TPM) =====
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# resurrect: save/restore pane contents and select programs
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-processes 'vim nvim less man tail top htop watch'
+
+# continuum: auto-save every 15 min, auto-restore on tmux server start
+set -g @continuum-save-interval '15'
+set -g @continuum-restore 'on'
+
+run '~/.tmux/plugins/tpm/tpm'
 # ===== wolffy .tmux.conf end =====
 EOF
+fi
+
+# Install TPM + plugins if missing
+if [[ ! -d ~/.tmux/plugins/tpm ]]; then
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm 2>/dev/null
+  git clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux/plugins/tmux-resurrect 2>/dev/null
+  git clone https://github.com/tmux-plugins/tmux-continuum ~/.tmux/plugins/tmux-continuum 2>/dev/null
 fi
 
 # ============================================================================
 # GIT SETUP
 # ============================================================================
-
-# use delta as pager if present
-command -v delta > /dev/null && export GIT_PAGER="delta" || :
 
 # set up git global ignore if git is present
 global_gitignore=$HOME/.config/git/ignore # default loc: https://git-scm.com/docs/gitignore
@@ -134,12 +169,13 @@ IGNORE
   git config --global fetch.prune true           # auto-prune deleted remote branches
   git config --global pull.rebase true
 
-  # delta configs (if available)
+  # delta configs (if available) -- https://github.com/dandavison/delta
   if command -v delta > /dev/null; then
     git config --global core.pager delta
     git config --global interactive.diffFilter "delta --color-only"
     git config --global delta.navigate true
     git config --global delta.side-by-side true
+    git config --global merge.conflictStyle zdiff3
   else
     echo "Warning: delta not installed. Install with: brew install git-delta" >&2
   fi
@@ -151,11 +187,10 @@ fi
 
 addalias() {
   new_alias="alias $(echo $1 | sed -e "s/=/='/" -e "s/$/'/")"
-  # Insert after the last existing alias line instead of appending to EOF
+  # Insert after the last existing alias line instead of appending to EOF.
+  # head/tail/mv, not `sed -i`, so it works on both BSD (macOS) and GNU (Linux).
   last_alias_line=$(grep -n '^alias ' ~/.zshrc | tail -1 | cut -d: -f1)
-  sed -i '' "${last_alias_line}a\\
-${new_alias}
-" ~/.zshrc
+  { head -n "$last_alias_line" ~/.zshrc; print -r -- "$new_alias"; tail -n +"$((last_alias_line + 1))" ~/.zshrc; } > ~/.zshrc.tmp && mv ~/.zshrc.tmp ~/.zshrc
   source ~/.zshrc
 }
 
@@ -170,13 +205,16 @@ chrome() { open "$@" -a "/Applications/Google Chrome.app/"; }
 idea() { open "$@" -a "$HOME/Applications/IntelliJ IDEA.app"; }
 pycharm() { open "$@" -a "$HOME/Applications/PyCharm.app"; }
 rmalias() { perl -pi -e "s/^alias $@/# $&/" ~/.zshrc; }
-settheme() { sed -i '' -e "s/ZSH_THEME=\"[a-z]*\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
+# Rewrites whichever ZSH_THEME line is active for this OS by matching the live
+# value, so it targets the right branch and handles hyphens (e.g. candy-kingdom).
+settheme() { perl -pi -e "s/ZSH_THEME=\"$ZSH_THEME\"/ZSH_THEME=\"$1\"/" ~/.zshrc && source ~/.zshrc; }
 sublime() { open "$@" -a "/Applications/Sublime Text.app/"; }
 
 # ============================================================================
 # ALIASES - UTILITY
 # ============================================================================
 
+alias aoe-tunnel="ssh -N -L 8080:localhost:8080 $CLOUD_DESKTOP"  # forward Agent of Empires dashboard -> http://localhost:8080
 alias daddy='sudo'
 alias find_large="du -sh * 2>/dev/null | grep -E '^[[:space:]]*[0-9]+(\.[0-9]+)?G'"
 alias ggrep='ggrep --color=auto'
@@ -249,6 +287,8 @@ alias xxx='spotify play uri spotify:artist:15UsOTVnJzReFVN1VCnxy4 >/dev/null && 
 
 alias tmns='tmux new -s'
 alias tma='tmux attach -t'
+alias tmls='tmux list-sessions'
+alias tmks='tmux kill-session -t'
 
 # ============================================================================
 # ALIASES - DOCKER
@@ -283,14 +323,10 @@ if command -v rg > /dev/null; then
   alias search='rg --smart-case'
 fi
 
-# fd (better find) - https://github.com/sharkdp/fd
-#if command -v fd > /dev/null; then
- # alias find='fd'
-#fi
-
 # fzf (fuzzy finder) - https://github.com/junegunn/fzf
 if command -v fzf > /dev/null; then
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  # CTRL-T (paste file paths), CTRL-R (history search), ALT-C (cd into dir).
+  source <(fzf --zsh)
 
   # Default options
   export FZF_DEFAULT_OPTS='
@@ -309,11 +345,6 @@ if command -v fzf > /dev/null; then
   if command -v rg > /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  fi
-
-  # Use fd for directory search
-  if command -v fd > /dev/null; then
-    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
   fi
 
   # Preview files with bat
@@ -401,6 +432,37 @@ notes() {
   fi
 }
 
+# Ensure the AWSMPAgreementsAutomations oncall poller is running in tmux.
+# Idempotent: re-running while the poller is already up is a no-op.
+oncall-poller() {
+  local session="oncall-poller"
+  local team="${1:-monalisa}"
+  local repo="/workplace/mtwol/Automations/src/AWSMPAgreementsAutomations"
+
+  if [[ ! -d "$repo" ]]; then
+    echo "oncall-poller: repo not found at $repo" >&2
+    return 1
+  fi
+
+  # If poll_tickets.py is already running anywhere, leave it alone.
+  if pgrep -f "poll_tickets.py" >/dev/null 2>&1; then
+    echo "oncall-poller: poller already running (pid $(pgrep -f poll_tickets.py | tr '\n' ' '))"
+    return 0
+  fi
+
+  # Poller is NOT running. If a stale session exists without it, kill it so
+  # we start clean rather than spawning a second window.
+  if tmux has-session -t "$session" 2>/dev/null; then
+    echo "oncall-poller: session '$session' exists but poller is dead, restarting it"
+    tmux kill-session -t "$session"
+  fi
+
+  echo "oncall-poller: starting poller (team=$team) in tmux session '$session'"
+  tmux new-session -d -s "$session" -c "$repo" \
+    "python3 scripts/poll_tickets.py --team $team"
+  echo "oncall-poller: started. Attach with: tmux attach -t $session"
+}
+
 # ============================================================================
 # WORK - ALIASES
 # ============================================================================
@@ -414,7 +476,6 @@ alias bwsrp='bws remove -p'
 alias cloud="ssh $CLOUD_DESKTOP"
 alias git-all="brazil-recursive-cmd --allPackages 'pwd && git status'"
 alias kinit=/usr/bin/kinit
-alias kiroo='kiro-cli chat --trust-all-tools'
 alias ndr='ninja-dev-sync -remove'
 alias nds=ninja-dev-sync
 alias ndsl='nds -list'
@@ -423,30 +484,47 @@ alias oncall='cd ~/workplace/oncall/src/MonaLisaShopperUnderstandingCDK && kiroo
 alias sam='brazil-build-tool-exec sam'
 alias update='bws sync -md; brazil-recursive-cmd "git pull --autostash" --allPackages'
 
+alias kiroo='kiro-cli chat --trust-all-tools'
+alias kiro-mini='kiro-cli chat --trust-tools=@builder-mcp/BrazilPackageBuilderAnalyzerTool,@builder-mcp/InternalCodeSearch,@builder-mcp/ReadInternalWebsites,@builder-mcp/BrazilWorkspace,@builder-mcp/BrazilBuildAnalyzer'
+
+# On the Cloud Desktop, drop into the workplace dir on a fresh login shell.
+if $IS_LINUX && [[ $PWD == "$HOME" && -d ~/workplace ]]; then
+  builtin cd ~/workplace
+fi
+
 # ============================================================================
 # EXPORTS & SOURCES
 # ============================================================================
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew (macOS); on Linux brew is not the package manager here.
+$IS_MAC && eval "$(/opt/homebrew/bin/brew shellenv)"
+
 source "$HOME/.brazil_completion/zsh_completion"
 
-export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)" # explicitly use java 1.8
+# Java 1.8 (macOS uses java_home; $JAVA_HOME/bin only added when JAVA_HOME is set)
+$IS_MAC && export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
+[[ -n "$JAVA_HOME" ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Path
 export PATH="/usr/local/opt/openjdk/bin:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 export PATH="/opt/homebrew/opt/curl/bin:$PATH"
-export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.toolbox/bin:$PATH"
 export PATH="$HOME/.aim/mcp-servers:$PATH"
 export PATH="$HOME/.rodar/bin:$PATH"
 export PATH="$HOME/scripts:$PATH"
-export PATH="$PATH:/opt/homebrew/anaconda3/bin"
+[[ -d /opt/homebrew/anaconda3/bin ]] && export PATH="$PATH:/opt/homebrew/anaconda3/bin"
+# Linux Cloud Desktop extras
+[[ -d /apollo/env/SPARPSDETools/bin ]] && export PATH="$PATH:/apollo/env/SPARPSDETools/bin"
+[[ -d "$HOME/go/bin" ]] && export PATH="$HOME/go/bin:$PATH"
+[[ -d /usr/local/go/bin ]] && export PATH="/usr/local/go/bin:$PATH"
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
 # ============================================================================
 # INTEGRATIONS
@@ -469,8 +547,37 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
 
-# Anaconda python — override Homebrew's python3 with Anaconda's
-# PATH reordering doesn't work due to typeset -U dedup, so we use a direct symlink
-# in /opt/homebrew/bin which Homebrew resolves first
-alias python3="/opt/homebrew/anaconda3/bin/python3"
-alias pip3="/opt/homebrew/anaconda3/bin/pip3"
+# Anaconda python: override Homebrew's python3 with Anaconda's (macOS only;
+# the Linux box uses pyenv below). PATH reordering doesn't work due to
+# typeset -U dedup, so we alias directly.
+if $IS_MAC; then
+  alias python3="/opt/homebrew/anaconda3/bin/python3"
+  alias pip3="/opt/homebrew/anaconda3/bin/pip3"
+fi
+
+# pyenv - Python version manager (Linux Cloud Desktop)
+export PYENV_ROOT="$HOME/.pyenv"
+if [[ -d $PYENV_ROOT/bin ]]; then
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+fi
+
+# fnm - fast node manager (Linux Cloud Desktop)
+FNM_PATH="$HOME/.local/share/fnm"
+if [[ -d "$FNM_PATH" ]]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "$(fnm env --shell zsh)"
+fi
+
+# IMDS off on the Cloud Desktop (set AWS_EC2_METADATA_DISABLED=false to re-enable)
+$IS_LINUX && export AWS_EC2_METADATA_DISABLED=true
+
+# Auto-authenticate Midway on login (Cloud Desktop only; needs ~/.pass).
+if $IS_LINUX && [[ -f "$HOME/.pass" ]]; then
+  mwinit -l &>/dev/null || { mwinit -o && cat ~/.pass | base64 --decode | kinit -f ; }
+fi
+
+# --- Gas Town Integration (managed by gt) ---
+export GASTOWN_DISABLE_OFFER_ADD=1
+[[ -f "$HOME/.config/gastown/shell-hook.sh" ]] && source "$HOME/.config/gastown/shell-hook.sh"
+# --- End Gas Town ---

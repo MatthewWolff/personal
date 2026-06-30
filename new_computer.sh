@@ -30,7 +30,6 @@ echo "==> Installing modern CLI tools..."
 brew install \
   bat \
   eza \
-  fd \
   fzf \
   ripgrep \
   zoxide
